@@ -464,6 +464,7 @@ ggplot(globalPop, aes(x = Old, y = Young,
 #### In this sub-section, you will learn how to create an animated bubble plot by using plot_ly() method.
 
 ```{r}
+#| warning: FALSE
 bp <- globalPop %>%
   plot_ly(x = ~Old, 
           y = ~Young, 
