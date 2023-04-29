@@ -312,15 +312,15 @@ ggplotly(p)
 
 #### The creation of a coordinated linked plot by using plotly involves three steps:
 
-##### \ highlight_key() of plotly package is used as shared data.
+#####  highlight_key() of plotly package is used as shared data.
 
-##### \ two scatterplots will be created by using ggplot2 functions.
+#####  two scatterplots will be created by using ggplot2 functions.
 
-##### \ lastly, subplot() of plotly package is used to place them next to each other side-by-side.
+#####  lastly, subplot() of plotly package is used to place them next to each other side-by-side.
 
 #### Thing to learn from the code chunk:
 
-##### \ highlight_key() simply creates an object of class crosstalk::SharedData.
+#####  highlight_key() simply creates an object of class crosstalk::SharedData.
 
 ```{r}
 d <- highlight_key(exam_data)
@@ -343,9 +343,9 @@ subplot(ggplotly(p1),
 
 ## Interactive Data Table: DT package
 
-#### \ A wrapper of the JavaScript Library DataTables
+####  A wrapper of the JavaScript Library DataTables
 
-#### \ Data objects in R can be rendered as HTML tables using the JavaScript library ‘DataTables’ (typically via R Markdown or Shiny).
+####  Data objects in R can be rendered as HTML tables using the JavaScript library 'DataTables' (typically via R Markdown or Shiny).
 
 ```{r}
 DT::datatable(exam_data, class= "compact")
@@ -357,9 +357,9 @@ DT::datatable(exam_data, class= "compact")
 
 #### Things to learn from the code chunk:
 
-##### \ highlight() is a function of plotly package. It sets a variety of options for brushing (i.e., highlighting) multiple plots. These options are primarily designed for linking multiple plotly graphs, and may not behave as expected when linking plotly to another htmlwidget package via crosstalk. In some cases, other htmlwidgets will respect these options, such as persistent selection in leaflet.
+#####  highlight() is a function of plotly package. It sets a variety of options for brushing (i.e., highlighting) multiple plots. These options are primarily designed for linking multiple plotly graphs, and may not behave as expected when linking plotly to another htmlwidget package via crosstalk. In some cases, other htmlwidgets will respect these options, such as persistent selection in leaflet.
 
-##### \ bscols() is a helper function of crosstalk package. It makes it easy to put HTML elements side by side. It can be called directly from the console but is especially designed to work in an R Markdown document. Warning: This will bring in all of Bootstrap!.
+#####  bscols() is a helper function of crosstalk package. It makes it easy to put HTML elements side by side. It can be called directly from the console but is especially designed to work in an R Markdown document. Warning: This will bring in all of Bootstrap!.
 
 ```{r}
 d <- highlight_key(exam_data) 
@@ -377,7 +377,6 @@ crosstalk::bscols(gg,
                   DT::datatable(d), 
                   widths = 5)  
 ```
-
 
 # Part II
 
@@ -419,8 +418,9 @@ ggplot(globalPop, aes(x = Old, y = Young,
 
 #### In the code chunk below,
 
-##### \ transition_time() of gganimate is used to create transition through distinct states in time (i.e. Year).
-##### \ ease_aes() is used to control easing of aesthetics. The default is linear. Other methods are: quadratic, cubic, quartic, quintic, sine, circular, exponential, elastic, back, and bounce.
+#####  transition_time() of gganimate is used to create transition through distinct states in time (i.e. Year).
+
+#####  ease_aes() is used to control easing of aesthetics. The default is linear. Other methods are: quadratic, cubic, quartic, quintic, sine, circular, exponential, elastic, back, and bounce.
 
 ```{r}
 ggplot(globalPop, aes(x = Old, y = Young, 
@@ -442,21 +442,21 @@ ggplot(globalPop, aes(x = Old, y = Young,
 #### In this sub-section, you will learn how to create an animated bubble plot by using ggplotly() method.
 
 ```{r}
-#gg <- ggplot(globalPop, 
-#       aes(x = Old, 
-#           y = Young, 
-#           size = Population, 
-#           colour = Country)) +
-#  geom_point(aes(size = Population,
-#                 frame = Year),
-#             alpha = 0.7, 
-#             show.legend = FALSE) +
-#  scale_colour_manual(values = country_colors) +
-#  scale_size(range = c(2, 12)) +
-#  labs(x = '% Aged', 
-#       y = '% Young')
+gg <- ggplot(globalPop, 
+       aes(x = Old, 
+           y = Young, 
+           size = Population, 
+           colour = Country)) +
+  geom_point(aes(size = Population,
+                 frame = Year),
+             alpha = 0.7, 
+            show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  labs(x = '% Aged', 
+       y = '% Young')
 
-#ggplotly(gg)
+ggplotly(gg)
 ```
 
 ## Building an animated bubble plot: plot_ly() method
@@ -478,5 +478,3 @@ bp <- globalPop %>%
           )
 bp
 ```
-
-
