@@ -220,10 +220,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting started</a>
   <ul class="collapse">
-  <li><a href="#install-launch-r-packages-and-load-data" id="toc-install-launch-r-packages-and-load-data" class="nav-link" data-scroll-target="#install-launch-r-packages-and-load-data">Install ,launch R packages and load data</a></li>
+  <li><a href="#install-launch-r-packages-and-load-data" id="toc-install-launch-r-packages-and-load-data" class="nav-link" data-scroll-target="#install-launch-r-packages-and-load-data">Install, launch R packages and load data</a></li>
   <li><a href="#q-q-plot" id="toc-q-q-plot" class="nav-link" data-scroll-target="#q-q-plot">Q-Q plot</a></li>
   <li><a href="#combine-q-q-plot-and-statistical-result" id="toc-combine-q-q-plot-and-statistical-result" class="nav-link" data-scroll-target="#combine-q-q-plot-and-statistical-result">Combine Q-Q plot and statistical result</a></li>
-  <li><a href="#the-code-trunk" id="toc-the-code-trunk" class="nav-link" data-scroll-target="#the-code-trunk">The code trunk</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -263,7 +262,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="getting-started" class="level1">
 <h1>Getting started</h1>
 <section id="install-launch-r-packages-and-load-data" class="level2">
-<h2 class="anchored" data-anchor-id="install-launch-r-packages-and-load-data">Install ,launch R packages and load data</h2>
+<h2 class="anchored" data-anchor-id="install-launch-r-packages-and-load-data">Install, launch R packages and load data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(rstatix, gt, patchwork, tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>exam_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Exam_data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -306,15 +305,17 @@ Note
 </section>
 <section id="combine-q-q-plot-and-statistical-result" class="level2">
 <h2 class="anchored" data-anchor-id="combine-q-q-plot-and-statistical-result">Combine Q-Q plot and statistical result</h2>
-<p>::: panel-tabset ## The plot</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">The plot</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">The code trunk</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
 <div class="cell-output-display">
 <p><img src="In-class_Ex04_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section>
-<section id="the-code-trunk" class="level2">
-<h2 class="anchored" data-anchor-id="the-code-trunk">The code trunk</h2>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>qq <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(exam_data, <span class="fu">aes</span>(<span class="at">sample=</span>ENGLISH))<span class="sc">+</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> </span>
@@ -329,6 +330,9 @@ Note
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>table_png <span class="ot">&lt;-</span> png<span class="sc">::</span><span class="fu">readPNG</span>(tmp,<span class="at">native=</span><span class="cn">TRUE</span>)</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>qq <span class="sc">+</span> table_png</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
 </div>
 
 
