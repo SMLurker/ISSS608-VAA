@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Wang Shengming">
+<meta name="dcterms.date" content="2023-05-06">
 
 <title>ISSS608-VAA - Take-home Exercise 1</title>
 <style>
@@ -21,6 +22,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -93,6 +157,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex03/In-class_Ex03.html">
  <span class="dropdown-text">In-class Exercise 3</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-class_Ex/In-class_Ex04/In-class_Ex04.html">
+ <span class="dropdown-text">In-class Exercise 4</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -156,7 +224,11 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#setting-the-scene" id="toc-setting-the-scene" class="nav-link active" data-scroll-target="#setting-the-scene">1. Setting the Scene</a></li>
   <li><a href="#the-task" id="toc-the-task" class="nav-link" data-scroll-target="#the-task">2. The Task</a></li>
-  <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description">3. Data Description</a></li>
+  <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description">3. Data Description</a>
+  <ul class="collapse">
+  <li><a href="#install-launch-r-packages-and-load-data" id="toc-install-launch-r-packages-and-load-data" class="nav-link" data-scroll-target="#install-launch-r-packages-and-load-data">4. Install, launch R packages and load data</a></li>
+  <li><a href="#analysis-and-visualization" id="toc-analysis-and-visualization" class="nav-link" data-scroll-target="#analysis-and-visualization">Analysis and visualization</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -179,6 +251,12 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 6, 2023</p>
+    </div>
+  </div>
   
     
   </div>
@@ -246,9 +324,98 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="amount-double-the-amount-of-the-transaction" class="level5">
 <h5 class="anchored" data-anchor-id="amount-double-the-amount-of-the-transaction">&nbsp; amount (double): the amount of the transaction</h5>
-
-
 </section>
+</section>
+<section id="install-launch-r-packages-and-load-data" class="level2">
+<h2 class="anchored" data-anchor-id="install-launch-r-packages-and-load-data">4. Install, launch R packages and load data</h2>
+<section id="reading-the-paticipants-csv-and-financialjournal-csv" class="level4">
+<h4 class="anchored" data-anchor-id="reading-the-paticipants-csv-and-financialjournal-csv">Reading the paticipants csv and financialjournal csv</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse,dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/Participants.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate_if</span>(is.character, as.factor)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p_data <span class="sc">%&gt;%</span> <span class="fu">distinct</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,011 × 7
+   participantId householdSize haveKids   age educationLevel      interestGroup
+           &lt;dbl&gt;         &lt;dbl&gt; &lt;lgl&gt;    &lt;dbl&gt; &lt;fct&gt;               &lt;fct&gt;        
+ 1             0             3 TRUE        36 HighSchoolOrCollege H            
+ 2             1             3 TRUE        25 HighSchoolOrCollege B            
+ 3             2             3 TRUE        35 HighSchoolOrCollege A            
+ 4             3             3 TRUE        21 HighSchoolOrCollege I            
+ 5             4             3 TRUE        43 Bachelors           H            
+ 6             5             3 TRUE        32 HighSchoolOrCollege D            
+ 7             6             3 TRUE        26 HighSchoolOrCollege I            
+ 8             7             3 TRUE        27 Bachelors           A            
+ 9             8             3 TRUE        20 Bachelors           G            
+10             9             3 TRUE        35 Bachelors           D            
+# ℹ 1,001 more rows
+# ℹ 1 more variable: joviality &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fin_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/FinancialJournal.csv"</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate_if</span>(is.character, as.factor) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>() </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fin_data<span class="sc">$</span>timestamp <span class="ot">&lt;-</span> <span class="fu">format</span>(<span class="fu">as.Date</span>(fin_data<span class="sc">$</span>timestamp), <span class="st">"%Y-%m"</span>) </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fin_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,512,523 × 4
+   participantId timestamp category  amount
+           &lt;dbl&gt; &lt;chr&gt;     &lt;fct&gt;      &lt;dbl&gt;
+ 1             0 2022-03   Wage      2473. 
+ 2             0 2022-03   Shelter   -555. 
+ 3             0 2022-03   Education  -38.0
+ 4             1 2022-03   Wage      2047. 
+ 5             1 2022-03   Shelter   -555. 
+ 6             1 2022-03   Education  -38.0
+ 7             2 2022-03   Wage      2437. 
+ 8             2 2022-03   Shelter   -557. 
+ 9             2 2022-03   Education  -12.8
+10             3 2022-03   Wage      2367. 
+# ℹ 1,512,513 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="modify-the-time-style-of-the-financial-data-pivot-the-catogory-and-regroup-and-calculate-the-savings" class="level4">
+<h4 class="anchored" data-anchor-id="modify-the-time-style-of-the-financial-data-pivot-the-catogory-and-regroup-and-calculate-the-savings">Modify the time style of the financial data, pivot the catogory and regroup and calculate the Savings</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f_data <span class="ot">&lt;-</span> fin_data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(participantId,timestamp,category) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_amount=</span><span class="fu">sum</span>(amount),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">'drop'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>f_data <span class="ot">&lt;-</span> f_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(.,<span class="at">names_from =</span> <span class="st">"category"</span>, <span class="at">values_from =</span> <span class="st">"total_amount"</span>) </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>f_data <span class="ot">&lt;-</span> <span class="fu">replace</span>(f_data, <span class="fu">is.na</span>(f_data), <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Saving =</span> <span class="fu">select</span>(., Education<span class="sc">:</span>RentAdjustment) <span class="sc">%&gt;%</span> <span class="fu">rowSums</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>f_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10,691 × 9
+   participantId timestamp Education  Food Recreation Shelter   Wage
+           &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+ 1             0 2022-03       -38.0 -268.     -349.    -555. 11932.
+ 2             0 2022-04       -38.0 -266.     -219.    -555.  8637.
+ 3             0 2022-05       -38.0 -265.     -383.    -555.  9048.
+ 4             0 2022-06       -38.0 -257.     -466.    -555.  9048.
+ 5             0 2022-07       -38.0 -270.    -1070.    -555.  8637.
+ 6             0 2022-08       -38.0 -262.     -314.    -555.  9459.
+ 7             0 2022-09       -38.0 -256.     -295.    -555.  9048.
+ 8             0 2022-10       -38.0 -267.      -25.0   -555.  8637.
+ 9             0 2022-11       -38.0 -261.     -377.    -555.  9048.
+10             0 2022-12       -38.0 -266.     -357.    -555.  9048.
+# ℹ 10,681 more rows
+# ℹ 2 more variables: RentAdjustment &lt;dbl&gt;, Saving &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="analysis-and-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-and-visualization">Analysis and visualization</h2>
+<div class="cell">
+
+</div>
+<div class="cell">
+
+</div>
+
+
 </section>
 </section>
 

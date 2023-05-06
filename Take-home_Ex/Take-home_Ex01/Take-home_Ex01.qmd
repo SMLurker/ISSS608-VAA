@@ -1,6 +1,12 @@
 ---
 title: "Take-home Exercise 1"
 author: "Wang Shengming"
+date: "06 May 2023"
+data_modified: "`r Sys.Date()`"
+execute:
+  warning: false
+  echo: true
+  eval: true
 ---
 
 # 1. Setting the Scene
@@ -46,3 +52,43 @@ author: "Wang Shengming"
 #####   category (string factor): a string describing the expense category, one of {"Education", "Food", "Recreation", "RentAdjustment", "Shelter", "Wage"}
 
 #####   amount (double): the amount of the transaction
+
+
+## 4. Install, launch R packages and load data
+
+#### Reading the paticipants csv and financialjournal csv
+
+```{r}
+pacman::p_load(tidyverse,dplyr)
+```
+```{r}
+p_data <- read_csv("data/Participants.csv") %>% 
+  mutate_if(is.character, as.factor)
+p_data %>% distinct()
+fin_data <- read_csv("data/FinancialJournal.csv") %>% 
+  mutate_if(is.character, as.factor) %>% distinct() 
+fin_data$timestamp <- format(as.Date(fin_data$timestamp), "%Y-%m") 
+fin_data
+```
+#### Modify the time style of the financial data, pivot the catogory and regroup and calculate the Savings
+```{r}
+f_data <- fin_data %>% group_by(participantId,timestamp,category) %>% 
+  summarise(total_amount=sum(amount),
+            .groups = 'drop') %>%
+  as.data.frame()
+f_data <- f_data %>%
+  pivot_wider(.,names_from = "category", values_from = "total_amount") 
+f_data <- replace(f_data, is.na(f_data), 0) %>%
+    mutate(Saving = select(., Education:RentAdjustment) %>% rowSums(na.rm = TRUE))
+f_data
+```
+
+## 5. Analysis and visualization
+
+```{r}
+
+```
+
+```{r}
+
+```
