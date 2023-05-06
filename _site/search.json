@@ -133,27 +133,6 @@
     "text": "Building an animated bubble plot: plot_ly() method\n\nIn this sub-section, you will learn how to create an animated bubble plot by using plot_ly() method.\n\nbp <- globalPop %>%\n  plot_ly(x = ~Old, \n          y = ~Young, \n          size = ~Population, \n          color = ~Continent, \n          frame = ~Year, \n          text = ~Country, \n          hoverinfo = \"text\",\n          type = 'scatter',\n          mode = 'markers'\n          )\nbp"
   },
   {
-    "objectID": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
-    "href": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
-    "title": "In-class Exercise 1",
-    "section": "",
-    "text": "pacman::p_load(tidyverse)\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n\n\n\n\n\nggplot(data=exam_data, aes(x=RACE))+geom_bar()+coord_flip()+theme_minimal() +theme(\n  panel.background = element_rect(fill = \"lightblue\",\n                                colour = \"lightblue\",\n                                size = 0.5, linetype = \"solid\"),\n  panel.grid.major = element_line(size = 0.5, linetype = 'solid',\n                                colour = \"white\"), \n  panel.grid.minor = element_line(size = 0.25, linetype = 'solid',\n                                colour = \"white\")\n)\n\nWarning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.\nℹ Please use the `linewidth` argument instead.\n\n\nWarning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.\nℹ Please use the `linewidth` argument instead."
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "ISSS608-VAA",
-    "section": "",
-    "text": "Welcome to ISSS608 Visual Analytics and Application. In this website, you will find my coursework prepared for this course."
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
-    "title": "Take-home Exercise 1",
-    "section": "",
-    "text": "1. Setting the Scene\n\nCity of Engagement, with a total population of 50,000, is a small city located at Country of Nowhere. The city serves as a service centre of an agriculture region surrounding the city. The main agriculture of the region is fruit farms and vineyards. The local council of the city is in the process of preparing the Local Plan 2023. A sample survey of 1000 representative residents had been conducted to collect data related to their household demographic and spending patterns, among other things. The city aims to use the data to assist with their major community revitalization efforts, including how to allocate a very large city renewal grant they have recently received.\n\n\n\n2. The Task\n\nIn this take-home exercise, you are required to apply the concepts and methods you had learned in Lesson 1-4 to reveal the demographic and financial characteristics of the city of Engagement, using appropriate static and interactive statistical graphics methods. This exercise requires a user-friendly and interactive solution that helps city managers and planners to explore the complex data in an engaging way and reveal hidden patterns. The data should be processed by using appropriate tidyverse family of packages and the statistical graphics must be prepared using ggplot2 and its extensions.\n\n\n\n3. Data Description\n\nFor the purpose of this study, two data sets are provided. They are:\n\n\nParticipants.csv\n\n\nContains information about the residents of City of Engagement that have agreed to participate in this study.\n\n  participantId (integer): unique ID assigned to each participant.\n\n\n  householdSize (integer): the number of people in the participant’s household\n\n\n  haveKids (boolean): whether there are children living in the participant’s household.\n\n\n  age (integer): participant’s age in years at the start of the study.\n\n\n  educationLevel (string factor): the participant’s education level, one of: {“Low”, “HighSchoolOrCollege”, “Bachelors”, “Graduate”}\n\n\n  interestGroup (char): a char representing the participant’s stated primary interest group, one of {“A”, “B”, “C”, “D”, “E”, “F”, “G”, “H”, “I”, “J”}. Note: specific topics of interest have been redacted to avoid bias.\n\n\n  joviality (float): a value ranging from [0,1] indicating the participant’s overall happiness level at the start of the study.\n\n\n\nFinancialJournal.csv\n\n\nContains information about financial transactions.\n\n  participantId (integer): unique ID corresponding to the participant affected\n\n\n  timestamp (datetime): the time when the check-in was logged\n\n\n  category (string factor): a string describing the expense category, one of {“Education”, “Food”, “Recreation”, “RentAdjustment”, “Shelter”, “Wage”}\n\n\n  amount (double): the amount of the transaction"
-  },
-  {
     "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
     "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
     "title": "Hands-on Exercise 4",
@@ -278,5 +257,33 @@
     "title": "Hands-on Exercise 4",
     "section": "Interactive Funnel Plot: plotly + ggplot2",
     "text": "Interactive Funnel Plot: plotly + ggplot2\n\nfp_ggplotly <- ggplotly(p,\n  tooltip = c(\"label\", \n              \"x\", \n              \"y\"))\nfp_ggplotly"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
+    "href": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
+    "title": "In-class Exercise 1",
+    "section": "",
+    "text": "pacman::p_load(tidyverse)\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n\n\n\n\n\nggplot(data=exam_data, aes(x=RACE))+geom_bar()+coord_flip()+theme_minimal() +theme(\n  panel.background = element_rect(fill = \"lightblue\",\n                                colour = \"lightblue\",\n                                size = 0.5, linetype = \"solid\"),\n  panel.grid.major = element_line(size = 0.5, linetype = 'solid',\n                                colour = \"white\"), \n  panel.grid.minor = element_line(size = 0.25, linetype = 'solid',\n                                colour = \"white\")\n)\n\nWarning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.\nℹ Please use the `linewidth` argument instead.\n\n\nWarning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.\nℹ Please use the `linewidth` argument instead."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
+    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
+    "title": "In-class Exercise 4",
+    "section": "",
+    "text": "pacman::p_load(rstatix, gt, patchwork, tidyverse)\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\n\n\n\n\nThe plotThe code chunk\n\n\n\n\n\n\n\n\n\n\nggplot(exam_data, aes(sample=ENGLISH))+\n  stat_qq() + \n  stat_qq_line()\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWe can see that the points deviate significantly from the straight diagonal line. This is a clear indication that the set of data is not normally distributed.\n\n\n\n\n\n::: panel-tabset ## The plot\n\n\n\n\n\n\n\n\n\nqq <- ggplot(exam_data, aes(sample=ENGLISH))+\n  stat_qq() + \n  stat_qq_line()\n\nsw_t <- exam_data %>%\n  shapiro_test(ENGLISH) %>%\n  gt()\n\ntmp <- tempfile(fileext = '.png')\ngtsave(sw_t, tmp)\ntable_png <- png::readPNG(tmp,native=TRUE)\n\nqq + table_png"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ISSS608-VAA",
+    "section": "",
+    "text": "Welcome to ISSS608 Visual Analytics and Application. In this website, you will find my coursework prepared for this course."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "title": "Take-home Exercise 1",
+    "section": "",
+    "text": "1. Setting the Scene\n\nCity of Engagement, with a total population of 50,000, is a small city located at Country of Nowhere. The city serves as a service centre of an agriculture region surrounding the city. The main agriculture of the region is fruit farms and vineyards. The local council of the city is in the process of preparing the Local Plan 2023. A sample survey of 1000 representative residents had been conducted to collect data related to their household demographic and spending patterns, among other things. The city aims to use the data to assist with their major community revitalization efforts, including how to allocate a very large city renewal grant they have recently received.\n\n\n\n2. The Task\n\nIn this take-home exercise, you are required to apply the concepts and methods you had learned in Lesson 1-4 to reveal the demographic and financial characteristics of the city of Engagement, using appropriate static and interactive statistical graphics methods. This exercise requires a user-friendly and interactive solution that helps city managers and planners to explore the complex data in an engaging way and reveal hidden patterns. The data should be processed by using appropriate tidyverse family of packages and the statistical graphics must be prepared using ggplot2 and its extensions.\n\n\n\n3. Data Description\n\nFor the purpose of this study, two data sets are provided. They are:\n\n\nParticipants.csv\n\n\nContains information about the residents of City of Engagement that have agreed to participate in this study.\n\n  participantId (integer): unique ID assigned to each participant.\n\n\n  householdSize (integer): the number of people in the participant’s household\n\n\n  haveKids (boolean): whether there are children living in the participant’s household.\n\n\n  age (integer): participant’s age in years at the start of the study.\n\n\n  educationLevel (string factor): the participant’s education level, one of: {“Low”, “HighSchoolOrCollege”, “Bachelors”, “Graduate”}\n\n\n  interestGroup (char): a char representing the participant’s stated primary interest group, one of {“A”, “B”, “C”, “D”, “E”, “F”, “G”, “H”, “I”, “J”}. Note: specific topics of interest have been redacted to avoid bias.\n\n\n  joviality (float): a value ranging from [0,1] indicating the participant’s overall happiness level at the start of the study.\n\n\n\nFinancialJournal.csv\n\n\nContains information about financial transactions.\n\n  participantId (integer): unique ID corresponding to the participant affected\n\n\n  timestamp (datetime): the time when the check-in was logged\n\n\n  category (string factor): a string describing the expense category, one of {“Education”, “Food”, “Recreation”, “RentAdjustment”, “Shelter”, “Wage”}\n\n\n  amount (double): the amount of the transaction"
   }
 ]

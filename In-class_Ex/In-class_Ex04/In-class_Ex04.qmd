@@ -1,0 +1,85 @@
+---
+title: "In-class Exercise 4"
+author: "SMLurker"
+date: "06 May 2023"
+data_modified: "`r Sys.Date()`"
+execute: 
+  warning: false
+  echo: true
+  eval: true
+edit: visual
+---
+# Getting started
+
+## Install ,launch R packages and load data
+
+```{r}
+pacman::p_load(rstatix, gt, patchwork, tidyverse)
+exam_data <- read_csv("data/Exam_data.csv")
+```
+
+## Q-Q plot
+
+::: panel-tabset
+## The plot
+```{r}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+ggplot(exam_data, aes(sample=ENGLISH))+
+  stat_qq() + 
+  stat_qq_line()
+```
+## The code chunk
+```{r}
+#| eval: false
+#| fig-width: 4
+#| fig-height: 4
+ggplot(exam_data, aes(sample=ENGLISH))+
+  stat_qq() + 
+  stat_qq_line()
+```
+:::
+
+::: {.callout-note}
+We can see that the points deviate significantly from the straight diagonal line. This is a clear indication that the set of data is not normally distributed.
+:::
+
+## Combine Q-Q plot and statistical result
+
+::: panel-tabset
+## The plot
+```{r}
+#| echo: false
+qq <- ggplot(exam_data, aes(sample=ENGLISH))+
+  stat_qq() + 
+  stat_qq_line()
+
+sw_t <- exam_data %>%
+  shapiro_test(ENGLISH) %>%
+  gt()
+
+tmp <- tempfile(fileext = '.png')
+gtsave(sw_t, tmp)
+table_png <- png::readPNG(tmp,native=TRUE)
+
+qq + table_png
+```
+## The code trunk
+```{r}
+#| eval: false
+qq <- ggplot(exam_data, aes(sample=ENGLISH))+
+  stat_qq() + 
+  stat_qq_line()
+
+sw_t <- exam_data %>%
+  shapiro_test(ENGLISH) %>%
+  gt()
+
+tmp <- tempfile(fileext = '.png')
+gtsave(sw_t, tmp)
+table_png <- png::readPNG(tmp,native=TRUE)
+
+qq + table_png
+```
+
