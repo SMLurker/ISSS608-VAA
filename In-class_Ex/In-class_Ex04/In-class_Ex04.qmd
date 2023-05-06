@@ -11,7 +11,7 @@ edit: visual
 ---
 # Getting started
 
-## Install ,launch R packages and load data
+## Install, launch R packages and load data
 
 ```{r}
 pacman::p_load(rstatix, gt, patchwork, tidyverse)
@@ -82,4 +82,6 @@ table_png <- png::readPNG(tmp,native=TRUE)
 
 qq + table_png
 ```
+:::
+
 
