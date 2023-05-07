@@ -58,7 +58,7 @@ execute:
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-pacman::p_load(tidyverse,dplyr,DT,plotly, ggdist,gganimate,ggstatsplot)
+pacman::p_load(tidyverse,dplyr,DT,plotly, ggdist,gganimate,ggstatsplot,ggiraph)
 ```
 
 ```{r}
@@ -114,7 +114,14 @@ df <- f_data %>% group_by(participantId) %>%
   as.data.frame()
 df2 <- merge(x= df,y= p_data, by = "participantId")
 
-my_sum <- df2 %>%
+df3 <- fin_data %>%                              # Applying group_by & summarise
+  group_by(participantId) %>%
+  summarise(count_month = n_distinct(timestamp)) %>%
+  filter(count_month>1)
+df4 <-merge(x=df3,y=df2, 
+             by="participantId", all.x=TRUE)
+
+my_sum <- df4 %>%
   group_by(educationLevel) %>%
   summarise(
     n=n(),
@@ -162,7 +169,14 @@ df <- f_data %>% group_by(participantId) %>%
   as.data.frame()
 df2 <- merge(x= df,y= p_data, by = "participantId")
 
-my_sum <- df2 %>%
+df3 <- fin_data %>%                              # Applying group_by & summarise
+  group_by(participantId) %>%
+  summarise(count_month = n_distinct(timestamp)) %>%
+  filter(count_month>1)
+df4 <-merge(x=df3,y=df2, 
+             by="participantId", all.x=TRUE)
+
+my_sum <- df4 %>%
   group_by(educationLevel) %>%
   summarise(
     n=n(),
@@ -200,9 +214,9 @@ knitr::kable(head(summ), format = 'html')
 ```
 :::
 
-## 5.2 Figure out the relationship of householdSize and Joviality
+#### 5.2 Figure out the relationship of householdSize and Joviality
 
-#### From the plotting below, we see that number of householdSize does not have huge effect on Joviality but there is still some slight impact that household with 2 or more people tend to have a bit higher mean joviality than 1 person and 2 people have the hight mean.
+##### From the plotting below, we see that number of householdSize does not have huge effect on the median of Joviality but there is still some slight impact that household with 2 or more people tend to have a middle or low level of joviality while one person are more intend to be either with high or low joviality
 
 ::: panel-tabset
 
@@ -214,7 +228,7 @@ knitr::kable(head(summ), format = 'html')
 #| fig-width: 4
 #| fig-height: 4
 ggbetweenstats(
-  data = df2,
+  data = df4,
   x = householdSize, 
   y = joviality,
   type = "np",
@@ -233,7 +247,7 @@ ggbetweenstats(
 #| fig-width: 4
 #| fig-height: 4
 ggbetweenstats(
-  data = df2,
+  data = df4,
   x = householdSize, 
   y = joviality,
   type = "np",
@@ -246,13 +260,13 @@ ggbetweenstats(
 ```
 :::
 
-## Distribution of savings
+#### 5.3 Money and Joviality
 
-#### from the graph below, we can find that the saving of most people are below 50000 within the study period.
+##### from the graph below, we can find that the saving of most people are below 50000 within the study period.
 
 ```{r}
 gghistostats(
-  data = df2,
+  data = df4,
   x = total_saving,
   type = "bayes",
   test.value = 60,
@@ -260,23 +274,55 @@ gghistostats(
 )
 ```
 
-## And by plotting the ralationship of savings, interestGroups and joviality, we can see that no matter how much people save, they are still willing to join any kinds of interest groups. 
+#### And by plotting the ralationship of wages and joviality, we can high wages does not really mean for high joviality. 
+
 
 ```{r}
-plot_ly(data = df2, 
-        x = ~total_saving, 
-        y = ~joviality, 
-        color = ~interestGroup)
-
+ggscatterstats(
+  data = df4,
+  x = total_w,
+  y = joviality,
+  marginal = FALSE,
+  )
 ```
 
+#### 5.4 InterestGroup and Joviality
+
+```{r}
+tooltip <- function(y, ymax, accuracy = .01) {
+  mean <- scales::number(y, accuracy = accuracy)
+  sem <- scales::number(ymax - y, accuracy = accuracy)
+  paste("Mean Joviality scores:", mean, "+/-", sem)
+}
+
+gg_point <- ggplot(data=df4, 
+                   aes(x = interestGroup),
+) +
+  stat_summary(aes(y = joviality, 
+                   tooltip = after_stat(  
+                     tooltip(y, ymax))),  
+    fun.data = "mean_se", 
+    geom = GeomInteractiveCol,  
+    fill = "light blue"
+  ) +
+  stat_summary(aes(y = joviality),
+    fun.data = mean_se,
+    geom = "errorbar", width = 0.2, size = 0.2
+  )+
+  coord_cartesian(ylim=c(0,0.8))
+
+girafe(ggobj = gg_point,
+       width_svg = 8,
+       height_svg = 8*0.618)
+
+```
 
 ## Conclusion
 
 #### Therefore, in order to assist with the major community revitalization efforts, the very large city renewal grant they have recently received should be allocated as below:
 
-###### \ Spend money on schools and universities to encourage people to gain knowledge and improve education qualification
+###### \ Invest in high-quality teachers, provide resources and support for schools and universities and utilize technology like online learning platforms and educational software to encourage people to gain knowledge and improve education qualification
 
-###### \ Make dating apps or other method to help single people conveniently meet and connect with like-minded people
+###### \ Make dating apps, matchmaking services, holding networking events or other method to help single people conveniently meet and connect with like-minded people and find a partner
 
-###### \ Hold activitied and interest groups to provide people with opportunities to meet people of same interests.
+###### \ Setup community service, hold activities and interest groups to provide people with opportunities to meet people of same interests.
