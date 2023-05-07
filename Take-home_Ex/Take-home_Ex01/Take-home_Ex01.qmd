@@ -265,6 +265,8 @@ ggbetweenstats(
 ##### from the graph below, we can find that the saving of most people are below 50000 within the study period.
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 gghistostats(
   data = df4,
   x = total_saving,
@@ -278,6 +280,8 @@ gghistostats(
 
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 ggscatterstats(
   data = df4,
   x = total_w,
@@ -288,7 +292,16 @@ ggscatterstats(
 
 #### 5.4 InterestGroup and Joviality
 
+##### It seems that most interest groups has a mean joviality value around 0.5 and has similar joviality distribution, but groups like D or H should be paid more attention to.
+
+::: panel-tabset
+
+## The plot
+
 ```{r}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
 tooltip <- function(y, ymax, accuracy = .01) {
   mean <- scales::number(y, accuracy = accuracy)
   sem <- scales::number(ymax - y, accuracy = accuracy)
@@ -316,6 +329,43 @@ girafe(ggobj = gg_point,
        height_svg = 8*0.618)
 
 ```
+
+## The code
+
+```{r}
+#| eval: false
+#| fig-width: 4
+#| fig-height: 4
+tooltip <- function(y, ymax, accuracy = .01) {
+  mean <- scales::number(y, accuracy = accuracy)
+  sem <- scales::number(ymax - y, accuracy = accuracy)
+  paste("Mean Joviality scores:", mean, "+/-", sem)
+}
+
+gg_point <- ggplot(data=df4, 
+                   aes(x = interestGroup),
+) +
+  stat_summary(aes(y = joviality, 
+                   tooltip = after_stat(  
+                     tooltip(y, ymax))),  
+    fun.data = "mean_se", 
+    geom = GeomInteractiveCol,  
+    fill = "light blue"
+  ) +
+  stat_summary(aes(y = joviality),
+    fun.data = mean_se,
+    geom = "errorbar", width = 0.2, size = 0.2
+  )+
+  coord_cartesian(ylim=c(0,0.8))
+
+girafe(ggobj = gg_point,
+       width_svg = 8,
+       height_svg = 8*0.618)
+
+```
+:::
+  
+
 
 ## Conclusion
 
