@@ -1,303 +1,37 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
-    "href": "Hands-on_Ex/Hands-on_Ex01/Hands-on_Ex01.html",
-    "title": "Hands-on Exercise 1",
-    "section": "",
-    "text": "The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.\n\npacman::p_load(tidyverse)\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html",
-    "title": "Hands-on Exercise 2",
-    "section": "",
-    "text": "pacman::p_load(ggrepel, patchwork, \n               ggthemes, hrbrthemes,\n               tidyverse) \n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggrepel",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggrepel",
-    "title": "Hands-on Exercise 2",
-    "section": "Working with ggrepel",
-    "text": "Working with ggrepel\n\nggplot(data=exam_data, \n       aes(x= MATHS, \n           y=ENGLISH)) +\n  geom_point() +\n  geom_smooth(method=lm, \n              size=0.5) +  \n  geom_label_repel(aes(label = ID), \n                   fontface = \"bold\") +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100)) +\n  ggtitle(\"English scores versus Maths scores for Primary 3\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-ggtheme-package",
-    "title": "Hands-on Exercise 2",
-    "section": "Working with ggtheme package",
-    "text": "Working with ggtheme package\n\nggthemes provides ‘ggplot2’ themes that replicate the look of plots by Edward Tufte, Stephen Few, Fivethirtyeight, The Economist, ‘Stata’, ‘Excel’, and The Wall Street Journal, among others.\n\n\nIn the example below, The Economist theme is used.\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_economist()"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#working-with-hrbthems-package",
-    "title": "Hands-on Exercise 2",
-    "section": "Working with hrbthems package",
-    "text": "Working with hrbthems package\n\nhrbrthemes package provides a base theme that focuses on typographic elements, including where various labels are placed as well as the fonts that are used.\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum()\n\n\n\n\n\n\nThe second goal centers around productivity for a production workflow. In fact, this “production workflow” is the context for where the elements of hrbrthemes should be used. Consult this vignette to learn more.\n\nggplot(data=exam_data, \n             aes(x = MATHS)) +\n  geom_histogram(bins=20, \n                 boundary = 100,\n                 color=\"grey25\", \n                 fill=\"grey90\") +\n  ggtitle(\"Distribution of Maths scores\") +\n  theme_ipsum(axis_title_size = 18,\n              base_size = 15,\n              grid = \"Y\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-graphics-pathwork-methods",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-composite-graphics-pathwork-methods",
-    "title": "Hands-on Exercise 2",
-    "section": "Creating Composite Graphics: pathwork methods",
-    "text": "Creating Composite Graphics: pathwork methods\n\nThere are several ggplot2 extension’s functions support the needs to prepare composite figure by combining several graphs such as grid.arrange() of gridExtra package and plot_grid() of cowplot package. In this section, I am going to shared with you an ggplot2 extension called patchwork which is specially designed for combining separate ggplot2 graphs into a single figure.\n\n\nPatchwork package has a very simple syntax where we can create layouts super easily. Here’s the general syntax that combines:\n\n Two-Column Layout using the Plus Sign +.\n\n\n Parenthesis () to create a subplot group.\n\n\n Two-Row Layout using the Division Sign /"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-two-ggplot2-graphs",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-two-ggplot2-graphs",
-    "title": "Hands-on Exercise 2",
-    "section": "Combining two ggplot2 graphs",
-    "text": "Combining two ggplot2 graphs\n\nFigure in the tabset below shows a composite of two histograms created using patchwork. Note how simple the syntax used to create the plot!\n\np1+p2"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-three-ggplot2-graphs",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#combining-three-ggplot2-graphs",
-    "title": "Hands-on Exercise 2",
-    "section": "Combining three ggplot2 graphs",
-    "text": "Combining three ggplot2 graphs\n\nWe can plot more complex composite by using appropriate operators. For example, the composite figure below is plotted by using:\n\n “|” operator to stack two ggplot2 graphs,\n\n\n “/” operator to place the plots beside each other,\n\n\n “()” operator the define the sequence of the plotting.\n\n(p1/p2)|p3\n\n`geom_smooth()` using formula = 'y ~ x'"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-with-tag",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-with-tag",
-    "title": "Hands-on Exercise 2",
-    "section": "Creating a composite figure with tag",
-    "text": "Creating a composite figure with tag\n\n((p1 / p2) | p3) + \n  plot_annotation(tag_levels = 'I')\n\n`geom_smooth()` using formula = 'y ~ x'"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-figure-with-insert",
-    "title": "Hands-on Exercise 2",
-    "section": "Creating figure with insert",
-    "text": "Creating figure with insert\n\nBeside providing functions to place plots next to each other based on the provided layout. With inset_element() of patchwork, we can place one or several plots or graphic elements freely on top or below another plot.\n\np12 <- p1|p2\np3 + inset_element(p12, \n                   left = 0.02, \n                   bottom = 0.7, \n                   right = 0.5, \n                   top = 1)\n\n`geom_smooth()` using formula = 'y ~ x'"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
-    "href": "Hands-on_Ex/Hands-on_Ex02/Hands-on_Ex02.html#creating-a-composite-figure-by-using-patchwork-and-ggtheme",
-    "title": "Hands-on Exercise 2",
-    "section": "Creating a composite figure by using patchwork and ggtheme",
-    "text": "Creating a composite figure by using patchwork and ggtheme\n\nFigure below is created by combining patchwork and theme_economist() of ggthemes package discussed earlier.\n\npatchwork <- (p1 / p2) | p3\npatchwork & theme_economist()\n\n`geom_smooth()` using formula = 'y ~ x'"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html",
-    "title": "Hands-on Exercise 3",
-    "section": "",
-    "text": "pacman::p_load(ggiraph, plotly, \n               patchwork, DT, tidyverse)\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n\n\n\n\n\n\n\n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(\n    aes(tooltip = ID),\n    stackgroups = TRUE, \n    binwidth = 1, \n    method = \"histodot\") +\n  scale_y_continuous(NULL, \n                     breaks = NULL)\ngirafe(\n  ggobj = p,\n  width_svg = 6,\n  height_svg = 6*0.618\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nexam_data$tooltip <- c(paste0(     \n  \"Name = \", exam_data$ID,         \n  \"\\n Class = \", exam_data$CLASS)) \n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(\n    aes(tooltip = exam_data$tooltip), \n    stackgroups = TRUE,\n    binwidth = 1,\n    method = \"histodot\") +\n  scale_y_continuous(NULL,               \n                     breaks = NULL)\ngirafe(\n  ggobj = p,\n  width_svg = 8,\n  height_svg = 8*0.618\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ntooltip_css <- \"background-color:white; #<<\nfont-style:bold; color:black;\" #<<\n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(              \n    aes(tooltip = ID),                   \n    stackgroups = TRUE,                  \n    binwidth = 1,                        \n    method = \"histodot\") +               \n  scale_y_continuous(NULL,               \n                     breaks = NULL)\ngirafe(                                  \n  ggobj = p,                             \n  width_svg = 6,                         \n  height_svg = 6*0.618,\n  options = list(    #<<\n    opts_tooltip(    #<<\n      css = tooltip_css)) #<<\n)  \n\n\n\n\n\n\n\n\n\n\n\n\ntooltip <- function(y, ymax, accuracy = .01) {\n  mean <- scales::number(y, accuracy = accuracy)\n  sem <- scales::number(ymax - y, accuracy = accuracy)\n  paste(\"Mean maths scores:\", mean, \"+/-\", sem)\n}\n\ngg_point <- ggplot(data=exam_data, \n                   aes(x = RACE),\n) +\n  stat_summary(aes(y = MATHS, \n                   tooltip = after_stat(  \n                     tooltip(y, ymax))),  \n    fun.data = \"mean_se\", \n    geom = GeomInteractiveCol,  \n    fill = \"light blue\"\n  ) +\n  stat_summary(aes(y = MATHS),\n    fun.data = mean_se,\n    geom = \"errorbar\", width = 0.2, size = 0.2\n  )\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\ngirafe(ggobj = gg_point,\n       width_svg = 8,\n       height_svg = 8*0.618)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(           \n    aes(data_id = CLASS),             \n    stackgroups = TRUE,               \n    binwidth = 1,                        \n    method = \"histodot\") +               \n  scale_y_continuous(NULL,               \n                     breaks = NULL)\ngirafe(                                  \n  ggobj = p,                             \n  width_svg = 6,                         \n  height_svg = 6*0.618                      \n)          \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(              \n    aes(data_id = CLASS),              \n    stackgroups = TRUE,                  \n    binwidth = 1,                        \n    method = \"histodot\") +               \n  scale_y_continuous(NULL,               \n                     breaks = NULL)\ngirafe(                                  \n  ggobj = p,                             \n  width_svg = 6,                         \n  height_svg = 6*0.618,\n  options = list(                        \n    opts_hover(css = \"fill: #202020;\"),  \n    opts_hover_inv(css = \"opacity:0.2;\") \n  )                                        \n)    \n\n\n\n\n\n\n\n\n\n\n\n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(              \n    aes(tooltip = CLASS, \n        data_id = CLASS),              \n    stackgroups = TRUE,                  \n    binwidth = 1,                        \n    method = \"histodot\") +               \n  scale_y_continuous(NULL,               \n                     breaks = NULL)\ngirafe(                                  \n  ggobj = p,                             \n  width_svg = 6,                         \n  height_svg = 6*0.618,\n  options = list(                        \n    opts_hover(css = \"fill: #202020;\"),  \n    opts_hover_inv(css = \"opacity:0.2;\") \n  )                                        \n)  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nexam_data$onclick <- sprintf(\"window.open(\\\"%s%s\\\")\",\n\"https://www.moe.gov.sg/schoolfinder?journey=Primary%20school\",\nas.character(exam_data$ID))\n\np <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(              \n    aes(onclick = onclick),              \n    stackgroups = TRUE,                  \n    binwidth = 1,                        \n    method = \"histodot\") +               \n  scale_y_continuous(NULL,               \n                     breaks = NULL)\ngirafe(                                  \n  ggobj = p,                             \n  width_svg = 6,                         \n  height_svg = 6*0.618) \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\np1 <- ggplot(data=exam_data, \n       aes(x = MATHS)) +\n  geom_dotplot_interactive(              \n    aes(data_id = ID),              \n    stackgroups = TRUE,                  \n    binwidth = 1,                        \n    method = \"histodot\") +  \n  coord_cartesian(xlim=c(0,100)) + \n  scale_y_continuous(NULL,               \n                     breaks = NULL)\n\np2 <- ggplot(data=exam_data, \n       aes(x = ENGLISH)) +\n  geom_dotplot_interactive(              \n    aes(data_id = ID),              \n    stackgroups = TRUE,                  \n    binwidth = 1,                        \n    method = \"histodot\") + \n  coord_cartesian(xlim=c(0,100)) + \n  scale_y_continuous(NULL,               \n                     breaks = NULL)\n\ngirafe(code = print(p1 + p2), \n       width_svg = 6,\n       height_svg = 3,\n       options = list(\n         opts_hover(css = \"fill: #202020;\"),\n         opts_hover_inv(css = \"opacity:0.2;\")\n         )\n       ) \n\n\n\n\n\n\n\n\n\n\n\n\nplot_ly(data = exam_data, \n             x = ~MATHS, \n             y = ~ENGLISH)\n\nNo trace type specified:\n  Based on info supplied, a 'scatter' trace seems appropriate.\n  Read more about this trace type -> https://plotly.com/r/reference/#scatter\n\n\nNo scatter mode specifed:\n  Setting the mode to markers\n  Read more about this attribute -> https://plotly.com/r/reference/#scatter-mode\n\n\n\n\n\n\n\n\n\n\n\n\n\nplot_ly(data = exam_data, \n        x = ~ENGLISH, \n        y = ~MATHS, \n        color = ~RACE)\n\nNo trace type specified:\n  Based on info supplied, a 'scatter' trace seems appropriate.\n  Read more about this trace type -> https://plotly.com/r/reference/#scatter\n\n\nNo scatter mode specifed:\n  Setting the mode to markers\n  Read more about this attribute -> https://plotly.com/r/reference/#scatter-mode\n\n\n\n\n\n\n\n\n\n\n\n\n\np <- ggplot(data=exam_data, \n            aes(x = MATHS,\n                y = ENGLISH)) +\n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))\nggplotly(p)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nd <- highlight_key(exam_data)\np1 <- ggplot(data=d, \n            aes(x = MATHS,\n                y = ENGLISH)) +\n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))\n\np2 <- ggplot(data=d, \n            aes(x = MATHS,\n                y = SCIENCE)) +\n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))\nsubplot(ggplotly(p1),\n        ggplotly(p2))\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDT::datatable(exam_data, class= \"compact\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nd <- highlight_key(exam_data) \np <- ggplot(d, \n            aes(ENGLISH, \n                MATHS)) + \n  geom_point(size=1) +\n  coord_cartesian(xlim=c(0,100),\n                  ylim=c(0,100))\n\ngg <- highlight(ggplotly(p),        \n                \"plotly_selected\")  \n\ncrosstalk::bscols(gg,               \n                  DT::datatable(d), \n                  widths = 5)  \n\nSetting the `off` event (i.e., 'plotly_deselect') to match the `on` event (i.e., 'plotly_selected'). You can change this default via the `highlight()` function."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#install-and-launching-r-packages-1",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#install-and-launching-r-packages-1",
-    "title": "Hands-on Exercise 3",
-    "section": "Install and launching R packages",
-    "text": "Install and launching R packages\n\npacman::p_load(readxl, gifski, gapminder,\n               plotly, gganimate, tidyverse)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-the-data",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#importing-the-data",
-    "title": "Hands-on Exercise 3",
-    "section": "Importing the data",
-    "text": "Importing the data\n\ncol <- c(\"Country\", \"Continent\")\nglobalPop <- read_xls(\"data/GlobalPopulation.xls\",\n                      sheet=\"Data\") %>%\n  mutate_each_(funs(factor(.)), col) %>%\n  mutate(Year = as.integer(Year))\n\nWarning: `mutate_each_()` was deprecated in dplyr 0.7.0.\nℹ Please use `across()` instead.\n\n\nWarning: `funs()` was deprecated in dplyr 0.8.0.\nℹ Please use a list of either functions or lambdas:\n\n# Simple named list: list(mean = mean, median = median)\n\n# Auto named with `tibble::lst()`: tibble::lst(mean, median)\n\n# Using lambdas list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-a-static-population-bubble-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-a-static-population-bubble-plot",
-    "title": "Hands-on Exercise 3",
-    "section": "Building a static population bubble plot",
-    "text": "Building a static population bubble plot\n\nIn the code chunk below, the basic ggplot2 functions are used to create a static bubble plot.\n\nggplot(globalPop, aes(x = Old, y = Young, \n                      size = Population, \n                      colour = Country)) +\n  geom_point(alpha = 0.7, \n             show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', \n       x = '% Aged', \n       y = '% Young')"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-the-animated-bubble-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-the-animated-bubble-plot",
-    "title": "Hands-on Exercise 3",
-    "section": "Building the animated bubble plot",
-    "text": "Building the animated bubble plot\n\nIn the code chunk below,\n\n transition_time() of gganimate is used to create transition through distinct states in time (i.e. Year).\n\n\n ease_aes() is used to control easing of aesthetics. The default is linear. Other methods are: quadratic, cubic, quartic, quintic, sine, circular, exponential, elastic, back, and bounce.\n\nggplot(globalPop, aes(x = Old, y = Young, \n                      size = Population, \n                      colour = Country)) +\n  geom_point(alpha = 0.7, \n             show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(title = 'Year: {frame_time}', \n       x = '% Aged', \n       y = '% Young') +\n  transition_time(Year) +       \n  ease_aes('linear')"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-an-animated-bubble-plot-ggplotly-method",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-an-animated-bubble-plot-ggplotly-method",
-    "title": "Hands-on Exercise 3",
-    "section": "Building an animated bubble plot: ggplotly() method",
-    "text": "Building an animated bubble plot: ggplotly() method\n\nIn this sub-section, you will learn how to create an animated bubble plot by using ggplotly() method.\n\ngg <- ggplot(globalPop, \n       aes(x = Old, \n           y = Young, \n           size = Population, \n           colour = Country)) +\n  geom_point(aes(size = Population,\n                 frame = Year),\n             alpha = 0.7, \n            show.legend = FALSE) +\n  scale_colour_manual(values = country_colors) +\n  scale_size(range = c(2, 12)) +\n  labs(x = '% Aged', \n       y = '% Young')\n\nWarning in geom_point(aes(size = Population, frame = Year), alpha = 0.7, :\nIgnoring unknown aesthetics: frame\n\nggplotly(gg)\n\nWarning in p$x$data[firstFrame] <- p$x$frames[[1]]$data: number of items to\nreplace is not a multiple of replacement length"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-an-animated-bubble-plot-plot_ly-method",
-    "href": "Hands-on_Ex/Hands-on_Ex03/Hands-on_Ex03.html#building-an-animated-bubble-plot-plot_ly-method",
-    "title": "Hands-on Exercise 3",
-    "section": "Building an animated bubble plot: plot_ly() method",
-    "text": "Building an animated bubble plot: plot_ly() method\n\nIn this sub-section, you will learn how to create an animated bubble plot by using plot_ly() method.\n\nbp <- globalPop %>%\n  plot_ly(x = ~Old, \n          y = ~Young, \n          size = ~Population, \n          color = ~Continent, \n          frame = ~Year, \n          text = ~Country, \n          hoverinfo = \"text\",\n          type = 'scatter',\n          mode = 'markers'\n          )\nbp"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html",
-    "title": "Hands-on Exercise 4",
-    "section": "",
-    "text": "pacman::p_load(ggstatsplot, tidyverse)\n\n\n\n\n\nexam <- read.csv(\"data/Exam_data.csv\")\n\n\n\n\n\n\n\n\n\n\nset.seed(1234)\n\ngghistostats(\n  data = exam,\n  x = ENGLISH,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"English scores\"\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggbetweenstats(\n  data = exam,\n  x = GENDER, \n  y = MATHS,\n  type = \"np\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nggbetweenstats(\n  data = exam,\n  x = RACE, \n  y = ENGLISH,\n  type = \"p\",\n  mean.ci = TRUE, \n  pairwise.comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\",\n  messages = FALSE\n)\n\n\n\n\n\n\n\n\n\n\n\n\nggscatterstats(\n  data = exam,\n  x = MATHS,\n  y = ENGLISH,\n  marginal = FALSE,\n  )\n\n\n\n\n\n\n\n\n\n\n\nexam1 <- exam %>% \n  mutate(MATHS_bins = \n           cut(MATHS, \n               breaks = c(0,60,75,85,100))\n)\n\n\n\n\n\nggbarstats(exam1, \n           x = MATHS_bins, \n           y = GENDER)\n\n\n\n\n\n\n\n\n\npacman::p_load(readxl, performance, parameters, see)\n\n\n\n\n\n\n\ncar_resale <- read_xls(\"data/ToyotaCorolla.xls\", \n                       \"data\")\ncar_resale\n\n# A tibble: 1,436 × 38\n      Id Model    Price Age_08_04 Mfg_Month Mfg_Year     KM Quarterly_Tax Weight\n   <dbl> <chr>    <dbl>     <dbl>     <dbl>    <dbl>  <dbl>         <dbl>  <dbl>\n 1    81 TOYOTA … 18950        25         8     2002  20019           100   1180\n 2     1 TOYOTA … 13500        23        10     2002  46986           210   1165\n 3     2 TOYOTA … 13750        23        10     2002  72937           210   1165\n 4     3  TOYOTA… 13950        24         9     2002  41711           210   1165\n 5     4 TOYOTA … 14950        26         7     2002  48000           210   1165\n 6     5 TOYOTA … 13750        30         3     2002  38500           210   1170\n 7     6 TOYOTA … 12950        32         1     2002  61000           210   1170\n 8     7  TOYOTA… 16900        27         6     2002  94612           210   1245\n 9     8 TOYOTA … 18600        30         3     2002  75889           210   1245\n10    44 TOYOTA … 16950        27         6     2002 110404           234   1255\n# ℹ 1,426 more rows\n# ℹ 29 more variables: Guarantee_Period <dbl>, HP_Bin <chr>, CC_bin <chr>,\n#   Doors <dbl>, Gears <dbl>, Cylinders <dbl>, Fuel_Type <chr>, Color <chr>,\n#   Met_Color <dbl>, Automatic <dbl>, Mfr_Guarantee <dbl>,\n#   BOVAG_Guarantee <dbl>, ABS <dbl>, Airbag_1 <dbl>, Airbag_2 <dbl>,\n#   Airco <dbl>, Automatic_airco <dbl>, Boardcomputer <dbl>, CD_Player <dbl>,\n#   Central_Lock <dbl>, Powered_Windows <dbl>, Power_Steering <dbl>, …\n\n\n\n\n\n\n\n\n\nmodel <- lm(Price ~ Age_08_04 + Mfg_Year + KM + \n              Weight + Guarantee_Period, data = car_resale)\nmodel\n\n\nCall:\nlm(formula = Price ~ Age_08_04 + Mfg_Year + KM + Weight + Guarantee_Period, \n    data = car_resale)\n\nCoefficients:\n     (Intercept)         Age_08_04          Mfg_Year                KM  \n      -2.637e+06        -1.409e+01         1.315e+03        -2.323e-02  \n          Weight  Guarantee_Period  \n       1.903e+01         2.770e+01  \n\n\n\n\n\n\n\n\n\ncheck_collinearity(model)\n\n# Check for Multicollinearity\n\nLow Correlation\n\n             Term  VIF     VIF 95% CI Increased SE Tolerance Tolerance 95% CI\n               KM 1.46 [ 1.37,  1.57]         1.21      0.68     [0.64, 0.73]\n           Weight 1.41 [ 1.32,  1.51]         1.19      0.71     [0.66, 0.76]\n Guarantee_Period 1.04 [ 1.01,  1.17]         1.02      0.97     [0.86, 0.99]\n\nHigh Correlation\n\n      Term   VIF     VIF 95% CI Increased SE Tolerance Tolerance 95% CI\n Age_08_04 31.07 [28.08, 34.38]         5.57      0.03     [0.03, 0.04]\n  Mfg_Year 31.16 [28.16, 34.48]         5.58      0.03     [0.03, 0.04]\n\n\n\ncheck_c <- check_collinearity(model)\nplot(check_c)\n\nVariable `Component` is not in your data frame :/\n\n\n\n\n\n\n\n\n\n\n\n\nmodel1 <- lm(Price ~ Age_08_04 + KM + \n              Weight + Guarantee_Period, data = car_resale)\n\n\ncheck_n <- check_normality(model1)\n\n\nplot(check_n)\n\n\n\n\n\n\n\n\n\n\n\ncheck_h <- check_heteroscedasticity(model1)\n\n\nplot(check_h)\n\n\n\n\n\n\n\n\n\n\n\ncheck_model(model1)\n\n\n\n\n\n\n\n\n\n\n\nplot(parameters(model1))\n\n\n\n\n\n\n\n\n\n\n\nggcoefstats(model1, \n            output = \"plot\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualizing the uncertainty of point estimates",
-    "text": "Visualizing the uncertainty of point estimates\n\npacman::p_load(tidyverse, plotly, crosstalk, DT, ggdist, gganimate)\n\n\nexam <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggplot2-methods",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggplot2-methods",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualizing the uncertainty of point estimates: ggplot2 methods",
-    "text": "Visualizing the uncertainty of point estimates: ggplot2 methods\n\nThe code chunk below performs the followings:\n\n group the observation by RACE,\n\n\n computes the count of observations, mean, standard deviation and standard error of Maths by RACE, and\n\n\n save the output as a tibble data table called my_sum.\n\nmy_sum <- exam %>%\n  group_by(RACE) %>%\n  summarise(\n    n=n(),\n    mean=mean(MATHS),\n    sd=sd(MATHS)\n    ) %>%\n  mutate(se=sd/sqrt(n-1))\n\n\n\n\nNote: For the mathematical explanation, please refer to Slide 20 of Lesson 4.\n\n\nNext, the code chunk below will\n\nknitr::kable(head(my_sum), format = 'html')\n\n\n\n \n  \n    RACE \n    n \n    mean \n    sd \n    se \n  \n \n\n  \n    Chinese \n    193 \n    76.50777 \n    15.69040 \n    1.132357 \n  \n  \n    Indian \n    12 \n    60.66667 \n    23.35237 \n    7.041005 \n  \n  \n    Malay \n    108 \n    57.44444 \n    21.13478 \n    2.043177 \n  \n  \n    Others \n    9 \n    69.66667 \n    10.72381 \n    3.791438"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggplot2-methods-1",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggplot2-methods-1",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualizing the uncertainty of point estimates: ggplot2 methods",
-    "text": "Visualizing the uncertainty of point estimates: ggplot2 methods\n\nThe code chunk below is used to reveal the standard error of mean maths score by race.\n\nggplot(my_sum) +\n  geom_errorbar(\n    aes(x=RACE, \n        ymin=mean-se, \n        ymax=mean+se), \n    width=0.2, \n    colour=\"black\", \n    alpha=0.9, \n    size=0.5) +\n  geom_point(aes\n           (x=RACE, \n            y=mean), \n           stat=\"identity\", \n           color=\"red\",\n           size = 1.5,\n           alpha=1) +\n  ggtitle(\"Standard error of mean \n          maths score by rac\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggdist-methods",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggdist-methods",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualizing the uncertainty of point estimates: ggdist methods",
-    "text": "Visualizing the uncertainty of point estimates: ggdist methods\n\nIn the code chunk below, stat_pointinterval() of ggdist is used to build a visual for displaying distribution of maths scores by race.\n\nexam %>%\n  ggplot(aes(x = RACE, \n             y = MATHS)) +\n  stat_pointinterval() +   #<<\n  labs(\n    title = \"Visualising confidence intervals of mean math score\",\n    subtitle = \"Mean Point + Multiple-interval plot\")\n\n\n\n\n\nexam %>%\n  ggplot(aes(x = RACE, y = MATHS)) +\n  stat_pointinterval(.width = 0.95,\n  .point = median,\n  .interval = qi) +\n  labs(\n    title = \"Visualising confidence intervals of mean math score\",\n    subtitle = \"Mean Point + Multiple-interval plot\")\n\nWarning in layer_slabinterval(data = data, mapping = mapping, stat =\nStatPointinterval, : Ignoring unknown parameters: `.point` and `.interval`"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggdist-methods-1",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggdist-methods-1",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualizing the uncertainty of point estimates: ggdist methods",
-    "text": "Visualizing the uncertainty of point estimates: ggdist methods\n\nexam %>%\n  ggplot(aes(x = RACE, \n             y = MATHS)) +\n  stat_pointinterval(\n    show.legend = FALSE) +   \n  labs(\n    title = \"Visualising confidence intervals of mean math score\",\n    subtitle = \"Mean Point + Multiple-interval plot\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggdist-methods-2",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualizing-the-uncertainty-of-point-estimates-ggdist-methods-2",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualizing the uncertainty of point estimates: ggdist methods",
-    "text": "Visualizing the uncertainty of point estimates: ggdist methods\n\nIn the code chunk below, stat_gradientinterval() of ggdist is used to build a visual for displaying distribution of maths scores by race.\n\nexam %>%\n  ggplot(aes(x = RACE, \n             y = MATHS)) +\n  stat_gradientinterval(   \n    fill = \"skyblue\",      \n    show.legend = TRUE     \n  ) +                        \n  labs(\n    title = \"Visualising confidence intervals of mean math score\",\n    subtitle = \"Gradient + interval plot\")"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualising-uncertainty-with-hypothetical-outcome-plots-hops",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualising-uncertainty-with-hypothetical-outcome-plots-hops",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualising Uncertainty with Hypothetical Outcome Plots (HOPs)",
-    "text": "Visualising Uncertainty with Hypothetical Outcome Plots (HOPs)\n\nStep 1: Installing ungeviz package\n\ndevtools::install_github(\"wilkelab/ungeviz\")\n\nSkipping install of 'ungeviz' from a github remote, the SHA1 (aeae12b0) has not changed since last install.\n  Use `force = TRUE` to force installation\n\n\n\n\nNote: You only need to perform this step once.\n\n\nStep 2: Launch the application in R\n\nlibrary(ungeviz)\n\n\nggplot(data = exam, \n       (aes(x = factor(RACE), y = MATHS))) +\n  geom_point(position = position_jitter(\n    height = 0.3, width = 0.05), \n    size = 0.4, color = \"#0072B2\", alpha = 1/2) +\n  geom_hpline(data = sampler(25, group = RACE), height = 0.6, color = \"#D55E00\") +\n  theme_bw() + \n  # `.draw` is a generated column indicating the sample draw\n  transition_states(.draw, 1, 3)\n\nWarning in geom_hpline(data = sampler(25, group = RACE), height = 0.6, color =\n\"#D55E00\"): Ignoring unknown parameters: `height`\n\n\nWarning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` in the `default_aes` field and elsewhere instead."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualising-uncertainty-with-hypothetical-outcome-plots-hops-1",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#visualising-uncertainty-with-hypothetical-outcome-plots-hops-1",
-    "title": "Hands-on Exercise 4",
-    "section": "Visualising Uncertainty with Hypothetical Outcome Plots (HOPs)",
-    "text": "Visualising Uncertainty with Hypothetical Outcome Plots (HOPs)\n\nggplot(data = exam, \n       (aes(x = factor(RACE), \n            y = MATHS))) +\n  geom_point(position = position_jitter(\n    height = 0.3, \n    width = 0.05), \n    size = 0.4, \n    color = \"#0072B2\", \n    alpha = 1/2) +\n  geom_hpline(data = sampler(25, \n                             group = RACE), \n              height = 0.6, \n              color = \"#D55E00\") +\n  theme_bw() + \n  transition_states(.draw, 1, 3)\n\nWarning in geom_hpline(data = sampler(25, group = RACE), height = 0.6, color =\n\"#D55E00\"): Ignoring unknown parameters: `height`"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#installing-and-launching-r-packages-1",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#installing-and-launching-r-packages-1",
-    "title": "Hands-on Exercise 4",
-    "section": "Installing and Launching R Packages",
-    "text": "Installing and Launching R Packages\n\npacman::p_load(tidyverse, FunnelPlotR, plotly, knitr)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#importing-data",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#importing-data",
-    "title": "Hands-on Exercise 4",
-    "section": "Importing Data",
-    "text": "Importing Data\n\nIn this section, COVID-19_DKI_Jakarta will be used. The data was downloaded from Open Data Covid-19 Provinsi DKI Jakarta portal. For this hands-on exercise, we are going to compare the cumulative COVID-19 cases and death by sub-district (i.e. kelurahan) as at 31st July 2021, DKI Jakarta\n\ncovid19 <- read_csv(\"data/COVID-19_DKI_Jakarta.csv\") %>%\n  mutate_if(is.character, as.factor)\n\nRows: 267 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (3): City, District, Sub-district\ndbl (4): Sub-district ID, Positive, Recovered, Death\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#funnelplotr-methods-the-basic-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#funnelplotr-methods-the-basic-plot",
-    "title": "Hands-on Exercise 4",
-    "section": "FunnelPlotR methods: The basic plot",
-    "text": "FunnelPlotR methods: The basic plot\n\nfunnel_plot(\n  numerator = covid19$Positive,\n  denominator = covid19$Death,\n  group = covid19$`Sub-district`\n)\n\n\n\n\nA funnel plot object with 267 points of which 0 are outliers. \nPlot is adjusted for overdispersion. \n\n\n\nThings to learn from the code chunk above.\n\n group in this function is different from the scatterplot. Here, it defines the level of the points to be plotted i.e. Sub-district, District or City. If Cityc is chosen, there are only six data points.\n\n\n By default, data_typeargument is “SR”.\n\n\n limit: Plot limits, accepted values are: 95 or 99, corresponding to 95% or 99.8% quantiles of the distribution."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#funnelplotr-methods-makeover-1",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#funnelplotr-methods-makeover-1",
-    "title": "Hands-on Exercise 4",
-    "section": "FunnelPlotR methods: Makeover 1",
-    "text": "FunnelPlotR methods: Makeover 1\n\nfunnel_plot(\n  numerator = covid19$Death,\n  denominator = covid19$Positive,\n  group = covid19$`Sub-district`,\n  data_type = \"PR\",     #<<\n  xrange = c(0, 6500),  #<<\n  yrange = c(0, 0.05)   #<<\n)\n\nWarning: The `xrange` argument deprecated; please use the `x_range` argument\ninstead.  For more options, see the help: `?funnel_plot`\n\n\nWarning: The `yrange` argument deprecated; please use the `y_range` argument\ninstead.  For more options, see the help: `?funnel_plot`\n\n\n\n\n\nA funnel plot object with 267 points of which 7 are outliers. \nPlot is adjusted for overdispersion. \n\n\n\nThings to learn from the code chunk above. + data_type argument is used to change from default “SR” to “PR” (i.e. proportions). + xrange and yrange are used to set the range of x-axis and y-axis"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#funnelplotr-methods-makeover-2",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#funnelplotr-methods-makeover-2",
-    "title": "Hands-on Exercise 4",
-    "section": "FunnelPlotR methods: Makeover 2",
-    "text": "FunnelPlotR methods: Makeover 2\n\nfunnel_plot(\n  numerator = covid19$Death,\n  denominator = covid19$Positive,\n  group = covid19$`Sub-district`,\n  data_type = \"PR\",   \n  xrange = c(0, 6500),  \n  yrange = c(0, 0.05),\n  label = NA,\n  title = \"Cumulative COVID-19 Fatality Rate by Cumulative Total Number of COVID-19 Positive Cases\", #<<           \n  x_label = \"Cumulative COVID-19 Positive Cases\", #<<\n  y_label = \"Cumulative Fatality Rate\"  #<<\n)\n\nWarning: The `xrange` argument deprecated; please use the `x_range` argument\ninstead.  For more options, see the help: `?funnel_plot`\n\n\nWarning: The `yrange` argument deprecated; please use the `y_range` argument\ninstead.  For more options, see the help: `?funnel_plot`\n\n\n\n\n\nA funnel plot object with 267 points of which 7 are outliers. \nPlot is adjusted for overdispersion. \n\n\n\nThings to learn from the code chunk above.\n\n label = NA argument is to removed the default label outliers feature.\n\n\n title argument is used to add plot title.\n\n\n x_label and y_label arguments are used to add/edit x-axis and y-axis titles."
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#computing-the-basic-derived-fields",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#computing-the-basic-derived-fields",
-    "title": "Hands-on Exercise 4",
-    "section": "Computing the basic derived fields",
-    "text": "Computing the basic derived fields\n\ndf <- covid19 %>%\n  mutate(rate = Death / Positive) %>%\n  mutate(rate.se = sqrt((rate*(1-rate)) / (Positive))) %>%\n  filter(rate > 0)\n\n\nfit.mean <- weighted.mean(df$rate, 1/df$rate.se^2)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#calculate-lower-and-upper-limits-for-95-and-99.9-ci",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#calculate-lower-and-upper-limits-for-95-and-99.9-ci",
-    "title": "Hands-on Exercise 4",
-    "section": "Calculate lower and upper limits for 95% and 99.9% CI",
-    "text": "Calculate lower and upper limits for 95% and 99.9% CI\n\nnumber.seq <- seq(1, max(df$Positive), 1)\nnumber.ll95 <- fit.mean - 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ul95 <- fit.mean + 1.96 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ll999 <- fit.mean - 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \nnumber.ul999 <- fit.mean + 3.29 * sqrt((fit.mean*(1-fit.mean)) / (number.seq)) \ndfCI <- data.frame(number.ll95, number.ul95, number.ll999, \n                   number.ul999, number.seq, fit.mean)"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#plotting-a-static-funnel-plot",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#plotting-a-static-funnel-plot",
-    "title": "Hands-on Exercise 4",
-    "section": "Plotting a static funnel plot",
-    "text": "Plotting a static funnel plot\n\np <- ggplot(df, aes(x = Positive, y = rate)) +\n  geom_point(aes(label=`Sub-district`), \n             alpha=0.4) +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ll95), \n            size = 0.4, \n            colour = \"grey40\", \n            linetype = \"dashed\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ul95), \n            size = 0.4, \n            colour = \"grey40\", \n            linetype = \"dashed\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ll999), \n            size = 0.4, \n            colour = \"grey40\") +\n  geom_line(data = dfCI, \n            aes(x = number.seq, \n                y = number.ul999), \n            size = 0.4, \n            colour = \"grey40\") +\n  geom_hline(data = dfCI, \n             aes(yintercept = fit.mean), \n             size = 0.4, \n             colour = \"grey40\") +\n  coord_cartesian(ylim=c(0,0.05)) +\n  annotate(\"text\", x = 1, y = -0.13, label = \"95%\", size = 3, colour = \"grey40\") + \n  annotate(\"text\", x = 4.5, y = -0.18, label = \"99%\", size = 3, colour = \"grey40\") + \n  ggtitle(\"Cumulative Fatality Rate by Cumulative Number of COVID-19 Cases\") +\n  xlab(\"Cumulative Number of COVID-19 Cases\") + \n  ylab(\"Cumulative Fatality Rate\") +\n  theme_light() +\n  theme(plot.title = element_text(size=12),\n        legend.position = c(0.91,0.85), \n        legend.title = element_text(size=7),\n        legend.text = element_text(size=7),\n        legend.background = element_rect(colour = \"grey60\", linetype = \"dotted\"),\n        legend.key.height = unit(0.3, \"cm\"))\n\nWarning in geom_point(aes(label = `Sub-district`), alpha = 0.4): Ignoring\nunknown aesthetics: label\n\np"
-  },
-  {
-    "objectID": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#interactive-funnel-plot-plotly-ggplot2",
-    "href": "Hands-on_Ex/Hands-on_Ex04/Hands-on_Ex04.html#interactive-funnel-plot-plotly-ggplot2",
-    "title": "Hands-on Exercise 4",
-    "section": "Interactive Funnel Plot: plotly + ggplot2",
-    "text": "Interactive Funnel Plot: plotly + ggplot2\n\nfp_ggplotly <- ggplotly(p,\n  tooltip = c(\"label\", \n              \"x\", \n              \"y\"))\nfp_ggplotly"
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
-    "href": "In-class_Ex/In-class_Ex01/In-class_Ex01.html",
-    "title": "In-class Exercise 1",
-    "section": "",
-    "text": "pacman::p_load(tidyverse)\n\n\n\n\n\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\nRows: 322 Columns: 7\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): ID, CLASS, GENDER, RACE\ndbl (3): ENGLISH, MATHS, SCIENCE\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\n\n\n\n\n\nggplot(data=exam_data, aes(x=RACE))+geom_bar()+coord_flip()+theme_minimal() +theme(\n  panel.background = element_rect(fill = \"lightblue\",\n                                colour = \"lightblue\",\n                                size = 0.5, linetype = \"solid\"),\n  panel.grid.major = element_line(size = 0.5, linetype = 'solid',\n                                colour = \"white\"), \n  panel.grid.minor = element_line(size = 0.25, linetype = 'solid',\n                                colour = \"white\")\n)\n\nWarning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.\nℹ Please use the `linewidth` argument instead.\n\n\nWarning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.\nℹ Please use the `linewidth` argument instead."
-  },
-  {
-    "objectID": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
-    "href": "In-class_Ex/In-class_Ex04/In-class_Ex04.html",
-    "title": "In-class Exercise 4",
-    "section": "",
-    "text": "pacman::p_load(rstatix, gt, patchwork, tidyverse)\nexam_data <- read_csv(\"data/Exam_data.csv\")\n\n\n\n\n\nThe plotThe code chunk\n\n\n\n\n\n\n\n\n\n\nggplot(exam_data, aes(sample=ENGLISH))+\n  stat_qq() + \n  stat_qq_line()\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWe can see that the points deviate significantly from the straight diagonal line. This is a clear indication that the set of data is not normally distributed.\n\n\n\n\n\n\nThe plotThe code trunk\n\n\n\n\n\n\n\n\n\n\nqq <- ggplot(exam_data, aes(sample=ENGLISH))+\n  stat_qq() + \n  stat_qq_line()\n\nsw_t <- exam_data %>%\n  shapiro_test(ENGLISH) %>%\n  gt()\n\ntmp <- tempfile(fileext = '.png')\ngtsave(sw_t, tmp)\ntable_png <- png::readPNG(tmp,native=TRUE)\n\nqq + table_png"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "ISSS608-VAA",
-    "section": "",
-    "text": "Welcome to ISSS608 Visual Analytics and Application. In this website, you will find my coursework prepared for this course."
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#install-launch-r-packages-load-data-and-build-data-table",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#install-launch-r-packages-load-data-and-build-data-table",
     "title": "Take-home Exercise 1",
-    "section": "",
-    "text": "1. Setting the Scene\n\nCity of Engagement, with a total population of 50,000, is a small city located at Country of Nowhere. The city serves as a service centre of an agriculture region surrounding the city. The main agriculture of the region is fruit farms and vineyards. The local council of the city is in the process of preparing the Local Plan 2023. A sample survey of 1000 representative residents had been conducted to collect data related to their household demographic and spending patterns, among other things. The city aims to use the data to assist with their major community revitalization efforts, including how to allocate a very large city renewal grant they have recently received.\n\n\n\n2. The Task\n\nIn this take-home exercise, you are required to apply the concepts and methods you had learned in Lesson 1-4 to reveal the demographic and financial characteristics of the city of Engagement, using appropriate static and interactive statistical graphics methods. This exercise requires a user-friendly and interactive solution that helps city managers and planners to explore the complex data in an engaging way and reveal hidden patterns. The data should be processed by using appropriate tidyverse family of packages and the statistical graphics must be prepared using ggplot2 and its extensions.\n\n\n\n3. Data Description\n\nFor the purpose of this study, two data sets are provided. They are:\n\n\nParticipants.csv\n\n\nContains information about the residents of City of Engagement that have agreed to participate in this study.\n\n  participantId (integer): unique ID assigned to each participant.\n\n\n  householdSize (integer): the number of people in the participant’s household\n\n\n  haveKids (boolean): whether there are children living in the participant’s household.\n\n\n  age (integer): participant’s age in years at the start of the study.\n\n\n  educationLevel (string factor): the participant’s education level, one of: {“Low”, “HighSchoolOrCollege”, “Bachelors”, “Graduate”}\n\n\n  interestGroup (char): a char representing the participant’s stated primary interest group, one of {“A”, “B”, “C”, “D”, “E”, “F”, “G”, “H”, “I”, “J”}. Note: specific topics of interest have been redacted to avoid bias.\n\n\n  joviality (float): a value ranging from [0,1] indicating the participant’s overall happiness level at the start of the study.\n\n\n\nFinancialJournal.csv\n\n\nContains information about financial transactions.\n\n  participantId (integer): unique ID corresponding to the participant affected\n\n\n  timestamp (datetime): the time when the check-in was logged\n\n\n  category (string factor): a string describing the expense category, one of {“Education”, “Food”, “Recreation”, “RentAdjustment”, “Shelter”, “Wage”}\n\n\n  amount (double): the amount of the transaction"
-  },
-  {
-    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#install-launch-r-packages-and-load-data",
-    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#install-launch-r-packages-and-load-data",
-    "title": "Take-home Exercise 1",
-    "section": "4. Install, launch R packages and load data",
-    "text": "4. Install, launch R packages and load data\n\nReading the paticipants csv and financialjournal csv\n\npacman::p_load(tidyverse,dplyr)\n\n\np_data <- read_csv(\"data/Participants.csv\") %>% mutate_if(is.character, as.factor)\np_data %>% distinct()\n\n# A tibble: 1,011 × 7\n   participantId householdSize haveKids   age educationLevel      interestGroup\n           <dbl>         <dbl> <lgl>    <dbl> <fct>               <fct>        \n 1             0             3 TRUE        36 HighSchoolOrCollege H            \n 2             1             3 TRUE        25 HighSchoolOrCollege B            \n 3             2             3 TRUE        35 HighSchoolOrCollege A            \n 4             3             3 TRUE        21 HighSchoolOrCollege I            \n 5             4             3 TRUE        43 Bachelors           H            \n 6             5             3 TRUE        32 HighSchoolOrCollege D            \n 7             6             3 TRUE        26 HighSchoolOrCollege I            \n 8             7             3 TRUE        27 Bachelors           A            \n 9             8             3 TRUE        20 Bachelors           G            \n10             9             3 TRUE        35 Bachelors           D            \n# ℹ 1,001 more rows\n# ℹ 1 more variable: joviality <dbl>\n\nfin_data <- read_csv(\"data/FinancialJournal.csv\") %>% mutate_if(is.character, as.factor) %>% distinct() \nfin_data$timestamp <- format(as.Date(fin_data$timestamp), \"%Y-%m\") \nfin_data\n\n# A tibble: 1,512,523 × 4\n   participantId timestamp category  amount\n           <dbl> <chr>     <fct>      <dbl>\n 1             0 2022-03   Wage      2473. \n 2             0 2022-03   Shelter   -555. \n 3             0 2022-03   Education  -38.0\n 4             1 2022-03   Wage      2047. \n 5             1 2022-03   Shelter   -555. \n 6             1 2022-03   Education  -38.0\n 7             2 2022-03   Wage      2437. \n 8             2 2022-03   Shelter   -557. \n 9             2 2022-03   Education  -12.8\n10             3 2022-03   Wage      2367. \n# ℹ 1,512,513 more rows\n\n\n\n\nModify the time style of the financial data, pivot the catogory and regroup and calculate the Savings\n\nf_data <- fin_data %>% group_by(participantId,timestamp,category) %>% \n  summarise(total_amount=sum(amount),\n            .groups = 'drop') %>%\n  as.data.frame()\nf_data <- f_data %>%\n  pivot_wider(.,names_from = \"category\", values_from = \"total_amount\") \nf_data <- replace(f_data, is.na(f_data), 0) %>%\n    mutate(Saving = select(., Education:RentAdjustment) %>% rowSums(na.rm = TRUE))\nf_data\n\n# A tibble: 10,691 × 9\n   participantId timestamp Education  Food Recreation Shelter   Wage\n           <dbl> <chr>         <dbl> <dbl>      <dbl>   <dbl>  <dbl>\n 1             0 2022-03       -38.0 -268.     -349.    -555. 11932.\n 2             0 2022-04       -38.0 -266.     -219.    -555.  8637.\n 3             0 2022-05       -38.0 -265.     -383.    -555.  9048.\n 4             0 2022-06       -38.0 -257.     -466.    -555.  9048.\n 5             0 2022-07       -38.0 -270.    -1070.    -555.  8637.\n 6             0 2022-08       -38.0 -262.     -314.    -555.  9459.\n 7             0 2022-09       -38.0 -256.     -295.    -555.  9048.\n 8             0 2022-10       -38.0 -267.      -25.0   -555.  8637.\n 9             0 2022-11       -38.0 -261.     -377.    -555.  9048.\n10             0 2022-12       -38.0 -266.     -357.    -555.  9048.\n# ℹ 10,681 more rows\n# ℹ 2 more variables: RentAdjustment <dbl>, Saving <dbl>"
+    "section": "4. Install, launch R packages, load data and build data table",
+    "text": "4. Install, launch R packages, load data and build data table\n\nReading the paticipants csv and build interactive paticipants table\n\n\nShow the code\npacman::p_load(tidyverse,dplyr,DT,plotly, ggdist,gganimate,ggstatsplot)\n\n\n\n\nShow the code\np_data <- read_csv(\"data/Participants.csv\") %>% \n  mutate_if(is.character, as.factor) %>% \n  distinct()\nDT::datatable(p_data, class= \"compact\")\n\n\n\n\n\n\n\n\n\nModify the time style of the financial data, pivot the catogory and regroup, calculate the Savings, and build interactive FinancialJournal table\n\n\nShow the code\nfin_data <- read_csv(\"data/FinancialJournal.csv\") %>% \n  mutate_if(is.character, as.factor) %>% distinct() \nfin_data$timestamp <- format(as.Date(fin_data$timestamp), \"%Y-%m\")\nf_data <- fin_data %>% group_by(participantId,timestamp,category) %>% \n  summarise(total_amount=sum(amount),\n            .groups = 'drop') %>%\n  as.data.frame()\nf_data <- f_data %>%\n  pivot_wider(.,names_from = \"category\", values_from = \"total_amount\") \nf_data <- replace(f_data, is.na(f_data), 0) %>%\n    mutate(Saving = select(., Education:RentAdjustment) %>% rowSums(na.rm = TRUE))\nDT::datatable(f_data, class= \"compact\")"
   },
   {
     "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#analysis-and-visualization",
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#analysis-and-visualization",
     "title": "Take-home Exercise 1",
-    "section": "Analysis and visualization",
-    "text": "Analysis and visualization"
+    "section": "5. Analysis and visualization",
+    "text": "5. Analysis and visualization\n\n5.1 Figure out the relationship of educationLevel and Joviality\n\nOverall, we see from below that with the increasing of education level, people tend to have higher level of joviality as the lower bound and mean value of joviality has a trend to increase. Although we can also observe that for low level of education, the range is bigger that all other level, this might indicate longer social experience can still affect the upper bound of joviality, but enhancing education is still a more direct way to increase joviality level.\n\nThe plotThe codeThe statistics table\n\n\n\n\n\n\n\n\n\n\ndf <- f_data %>% group_by(participantId) %>% \n  summarise(total_edu=sum(Education),\n            total_food=sum(Food),\n            total_rec=sum(Recreation),\n            total_shl=sum(Shelter),\n            total_w=sum(Wage),\n            total_rent=sum(RentAdjustment),\n            total_saving=sum(Saving),\n            .groups = 'drop') %>%\n  as.data.frame()\ndf2 <- merge(x= df,y= p_data, by = \"participantId\")\n\nmy_sum <- df2 %>%\n  group_by(educationLevel) %>%\n  summarise(\n    n=n(),\n    mean=mean(joviality),\n    sd=sd(joviality)\n    ) %>%\n  mutate(se=sd/sqrt(n-1))\n\nggplot(my_sum) +\n  geom_errorbar(\n    aes(x=educationLevel, \n        ymin=mean-se, \n        ymax=mean+se), \n    width=0.2, \n    colour=\"black\", \n    alpha=0.9, \n    size=0.5) +\n  geom_point(aes\n           (x=educationLevel, \n            y=mean), \n           stat=\"identity\", \n           color=\"red\",\n           size = 1.5,\n           alpha=1) +\n  scale_x_discrete(limits = c(\"Low\", \"HighSchoolOrCollege\", \"Bachelors\", \"Graduate\")) +\n  ggtitle(\"Standard error of mean \n          Joviality score by educationLevel\")\n\n\n\n\nsumm <- my_sum[order(factor(my_sum$educationLevel, levels = c(\"Low\", \"HighSchoolOrCollege\", \"Bachelors\", \"Graduate\"))),c(\"educationLevel\",\"n\",\"mean\",\"sd\")]\nknitr::kable(head(summ), format = 'html')\n\n\n\n \n  \n    educationLevel \n    n \n    mean \n    sd \n  \n \n\n  \n    Low \n    84 \n    0.4868956 \n    0.2989496 \n  \n  \n    HighSchoolOrCollege \n    525 \n    0.4859899 \n    0.2858795 \n  \n  \n    Bachelors \n    232 \n    0.4975164 \n    0.2976517 \n  \n  \n    Graduate \n    170 \n    0.5162219 \n    0.2969368"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#figure-out-the-relationship-of-householdsize-and-joviality",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#figure-out-the-relationship-of-householdsize-and-joviality",
+    "title": "Take-home Exercise 1",
+    "section": "5.2 Figure out the relationship of householdSize and Joviality",
+    "text": "5.2 Figure out the relationship of householdSize and Joviality\n\nFrom the plotting below, we see that number of householdSize does not have huge effect on Joviality but there is still some slight impact that household with 2 or more people tend to have a bit higher mean joviality than 1 person and 2 people have the hight mean.\n\nThe plotThe code\n\n\n\n\n\n\n\n\n\n\nggbetweenstats(\n  data = df2,\n  x = householdSize, \n  y = joviality,\n  type = \"np\",\n  mean.ci = TRUE, \n  pairwise.comparisons = TRUE, \n  pairwise.display = \"s\",\n  p.adjust.method = \"fdr\",\n  messages = FALSE\n)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#next",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#next",
+    "title": "Take-home Exercise 1",
+    "section": "Next",
+    "text": "Next\n\ngghistostats(\n  data = df2,\n  x = total_saving,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"total_saving\"\n)\n\n\n\n\n\nplot_ly(data = df2, \n        x = ~total_saving, \n        y = ~joviality, \n        color = ~interestGroup)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#distribution-of-savings",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#distribution-of-savings",
+    "title": "Take-home Exercise 1",
+    "section": "Distribution of savings",
+    "text": "Distribution of savings\n\nfrom the graph below, we can find that the saving of most people are below 50000 within the study period.\n\ngghistostats(\n  data = df2,\n  x = total_saving,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"total_saving\"\n)\n\n\n\n\n\nplot_ly(data = df2, \n        x = ~total_saving, \n        y = ~joviality, \n        color = ~interestGroup)"
   }
 ]

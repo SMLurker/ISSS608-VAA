@@ -23,55 +23,61 @@ execute:
 
 #### Participants.csv
 
-#### Contains information about the residents of City of Engagement that have agreed to participate in this study.
+##### Contains information about the residents of City of Engagement that have agreed to participate in this study.
 
-#####   participantId (integer): unique ID assigned to each participant.
+######   participantId (integer): unique ID assigned to each participant.
 
-#####   householdSize (integer): the number of people in the participant's household
+######   householdSize (integer): the number of people in the participant's household
 
-#####   haveKids (boolean): whether there are children living in the participant's household.
+######   haveKids (boolean): whether there are children living in the participant's household.
 
-#####   age (integer): participant's age in years at the start of the study.
+######   age (integer): participant's age in years at the start of the study.
 
-#####   educationLevel (string factor): the participant's education level, one of: {"Low", "HighSchoolOrCollege", "Bachelors", "Graduate"}
+######   educationLevel (string factor): the participant's education level, one of: {"Low", "HighSchoolOrCollege", "Bachelors", "Graduate"}
 
-#####   interestGroup (char): a char representing the participant's stated primary interest group, one of {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}. Note: specific topics of interest have been redacted to avoid bias.
+######   interestGroup (char): a char representing the participant's stated primary interest group, one of {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}. Note: specific topics of interest have been redacted to avoid bias.
 
-#####   joviality (float): a value ranging from \[0,1\] indicating the participant's overall happiness level at the start of the study.
+######   joviality (float): a value ranging from \[0,1\] indicating the participant's overall happiness level at the start of the study.
 
 #### FinancialJournal.csv
 
-#### Contains information about financial transactions.
+##### Contains information about financial transactions.
 
-#####   participantId (integer): unique ID corresponding to the participant affected
+######   participantId (integer): unique ID corresponding to the participant affected
 
+######   timestamp (datetime): the time when the check-in was logged
 
+######   category (string factor): a string describing the expense category, one of {"Education", "Food", "Recreation", "RentAdjustment", "Shelter", "Wage"}
 
-#####   timestamp (datetime): the time when the check-in was logged
+######   amount (double): the amount of the transaction
 
-#####   category (string factor): a string describing the expense category, one of {"Education", "Food", "Recreation", "RentAdjustment", "Shelter", "Wage"}
+## 4. Install, launch R packages, load data and build data table
 
-#####   amount (double): the amount of the transaction
-
-
-## 4. Install, launch R packages and load data
-
-#### Reading the paticipants csv and financialjournal csv
+#### Reading the paticipants csv and build interactive paticipants table
 
 ```{r}
-pacman::p_load(tidyverse,dplyr)
+#| code-fold: true
+#| code-summary: "Show the code"
+pacman::p_load(tidyverse,dplyr,DT,plotly, ggdist,gganimate,ggstatsplot)
 ```
+
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 p_data <- read_csv("data/Participants.csv") %>% 
-  mutate_if(is.character, as.factor)
-p_data %>% distinct()
+  mutate_if(is.character, as.factor) %>% 
+  distinct()
+DT::datatable(p_data, class= "compact")
+```
+
+#### Modify the time style of the financial data, pivot the catogory and regroup, calculate the Savings, and build interactive FinancialJournal table
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 fin_data <- read_csv("data/FinancialJournal.csv") %>% 
   mutate_if(is.character, as.factor) %>% distinct() 
-fin_data$timestamp <- format(as.Date(fin_data$timestamp), "%Y-%m") 
-fin_data
-```
-#### Modify the time style of the financial data, pivot the catogory and regroup and calculate the Savings
-```{r}
+fin_data$timestamp <- format(as.Date(fin_data$timestamp), "%Y-%m")
 f_data <- fin_data %>% group_by(participantId,timestamp,category) %>% 
   summarise(total_amount=sum(amount),
             .groups = 'drop') %>%
@@ -80,15 +86,185 @@ f_data <- f_data %>%
   pivot_wider(.,names_from = "category", values_from = "total_amount") 
 f_data <- replace(f_data, is.na(f_data), 0) %>%
     mutate(Saving = select(., Education:RentAdjustment) %>% rowSums(na.rm = TRUE))
-f_data
+DT::datatable(f_data, class= "compact")
 ```
 
 ## 5. Analysis and visualization
 
-```{r}
+#### 5.1 Figure out the relationship of educationLevel and Joviality
 
+###### Overall, we see from below that with the increasing of education level, people tend to have higher level of joviality as the lower bound and mean value of joviality has a trend to increase. Although we can also observe that for low level of education, the range is bigger that all other level, this might indicate longer social experience can still affect the upper bound of joviality, but enhancing education is still a more direct way to increase joviality level.
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+df <- f_data %>% group_by(participantId) %>% 
+  summarise(total_edu=sum(Education),
+            total_food=sum(Food),
+            total_rec=sum(Recreation),
+            total_shl=sum(Shelter),
+            total_w=sum(Wage),
+            total_rent=sum(RentAdjustment),
+            total_saving=sum(Saving),
+            .groups = 'drop') %>%
+  as.data.frame()
+df2 <- merge(x= df,y= p_data, by = "participantId")
+
+my_sum <- df2 %>%
+  group_by(educationLevel) %>%
+  summarise(
+    n=n(),
+    mean=mean(joviality),
+    sd=sd(joviality)
+    ) %>%
+  mutate(se=sd/sqrt(n-1))
+
+ggplot(my_sum) +
+  geom_errorbar(
+    aes(x=educationLevel, 
+        ymin=mean-se, 
+        ymax=mean+se), 
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    size=0.5) +
+  geom_point(aes
+           (x=educationLevel, 
+            y=mean), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  scale_x_discrete(limits = c("Low", "HighSchoolOrCollege", "Bachelors", "Graduate")) +
+  ggtitle("Standard error of mean 
+          Joviality score by educationLevel")
+```
+
+## The code
+
+```{r}
+#| eval: false
+#| fig-width: 4
+#| fig-height: 4
+df <- f_data %>% group_by(participantId) %>% 
+  summarise(total_edu=sum(Education),
+            total_food=sum(Food),
+            total_rec=sum(Recreation),
+            total_shl=sum(Shelter),
+            total_w=sum(Wage),
+            total_rent=sum(RentAdjustment),
+            total_saving=sum(Saving),
+            .groups = 'drop') %>%
+  as.data.frame()
+df2 <- merge(x= df,y= p_data, by = "participantId")
+
+my_sum <- df2 %>%
+  group_by(educationLevel) %>%
+  summarise(
+    n=n(),
+    mean=mean(joviality),
+    sd=sd(joviality)
+    ) %>%
+  mutate(se=sd/sqrt(n-1))
+
+ggplot(my_sum) +
+  geom_errorbar(
+    aes(x=educationLevel, 
+        ymin=mean-se, 
+        ymax=mean+se), 
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    size=0.5) +
+  geom_point(aes
+           (x=educationLevel, 
+            y=mean), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  scale_x_discrete(limits = c("Low", "HighSchoolOrCollege", "Bachelors", "Graduate")) +
+  ggtitle("Standard error of mean 
+          Joviality score by educationLevel")
+```
+
+## The statistics table
+
+```{r}
+summ <- my_sum[order(factor(my_sum$educationLevel, levels = c("Low", "HighSchoolOrCollege", "Bachelors", "Graduate"))),c("educationLevel","n","mean","sd")]
+knitr::kable(head(summ), format = 'html')
+```
+:::
+
+## 5.2 Figure out the relationship of householdSize and Joviality
+
+#### From the plotting below, we see that number of householdSize does not have huge effect on Joviality but there is still some slight impact that household with 2 or more people tend to have a bit higher mean joviality than 1 person and 2 people have the hight mean.
+
+::: panel-tabset
+
+## The plot
+
+```{r}
+#| warning: false
+#| echo: false
+#| fig-width: 4
+#| fig-height: 4
+ggbetweenstats(
+  data = df2,
+  x = householdSize, 
+  y = joviality,
+  type = "np",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE
+)
+```
+## The code
+
+```{r}
+#| warning: false
+#| eval: false
+#| fig-width: 4
+#| fig-height: 4
+ggbetweenstats(
+  data = df2,
+  x = householdSize, 
+  y = joviality,
+  type = "np",
+  mean.ci = TRUE, 
+  pairwise.comparisons = TRUE, 
+  pairwise.display = "s",
+  p.adjust.method = "fdr",
+  messages = FALSE
+)
+```
+:::
+
+## Distribution of savings
+
+#### from the graph below, we can find that the saving of most people are below 50000 within the study period.
+
+```{r}
+gghistostats(
+  data = df2,
+  x = total_saving,
+  type = "bayes",
+  test.value = 60,
+  xlab = "total_saving"
+)
 ```
 
 ```{r}
+plot_ly(data = df2, 
+        x = ~total_saving, 
+        y = ~joviality, 
+        color = ~interestGroup)
 
 ```
+
