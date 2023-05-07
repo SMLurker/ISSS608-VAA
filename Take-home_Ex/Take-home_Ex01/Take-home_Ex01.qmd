@@ -260,6 +260,8 @@ gghistostats(
 )
 ```
 
+## And by plotting the ralationship of savings, interestGroups and joviality, we can see that no matter how much people save, they are still willing to join any kinds of interest groups. 
+
 ```{r}
 plot_ly(data = df2, 
         x = ~total_saving, 
@@ -268,3 +270,13 @@ plot_ly(data = df2,
 
 ```
 
+
+## Conclusion
+
+#### Therefore, in order to assist with the major community revitalization efforts, the very large city renewal grant they have recently received should be allocated as below:
+
+###### \ Spend money on schools and universities to encourage people to gain knowledge and improve education qualification
+
+###### \ Make dating apps or other method to help single people conveniently meet and connect with like-minded people
+
+###### \ Hold activitied and interest groups to provide people with opportunities to meet people of same interests.

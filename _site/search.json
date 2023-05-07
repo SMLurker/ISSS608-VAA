@@ -32,6 +32,20 @@
     "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#distribution-of-savings",
     "title": "Take-home Exercise 1",
     "section": "Distribution of savings",
-    "text": "Distribution of savings\n\nfrom the graph below, we can find that the saving of most people are below 50000 within the study period.\n\ngghistostats(\n  data = df2,\n  x = total_saving,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"total_saving\"\n)\n\n\n\n\n\nplot_ly(data = df2, \n        x = ~total_saving, \n        y = ~joviality, \n        color = ~interestGroup)"
+    "text": "Distribution of savings\n\nfrom the graph below, we can find that the saving of most people are below 50000 within the study period.\n\ngghistostats(\n  data = df2,\n  x = total_saving,\n  type = \"bayes\",\n  test.value = 60,\n  xlab = \"total_saving\"\n)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#and-by-plotting-the-ralationship-of-savings-interestgroups-and-joviality-we-can-see-that-no-matter-how-much-people-save-they-are-still-willing-to-join-any-kinds-of-interest-groups.",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#and-by-plotting-the-ralationship-of-savings-interestgroups-and-joviality-we-can-see-that-no-matter-how-much-people-save-they-are-still-willing-to-join-any-kinds-of-interest-groups.",
+    "title": "Take-home Exercise 1",
+    "section": "And by plotting the ralationship of savings, interestGroups and joviality, we can see that no matter how much people save, they are still willing to join any kinds of interest groups.",
+    "text": "And by plotting the ralationship of savings, interestGroups and joviality, we can see that no matter how much people save, they are still willing to join any kinds of interest groups.\n\nplot_ly(data = df2, \n        x = ~total_saving, \n        y = ~joviality, \n        color = ~interestGroup)"
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#conclusion",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#conclusion",
+    "title": "Take-home Exercise 1",
+    "section": "Conclusion",
+    "text": "Conclusion\n\nTherefore, in order to assist with the major community revitalization efforts, the very large city renewal grant they have recently received should be allocated as below:\n\n Spend money on schools and universities to encourage people to gain knowledge and improve education qualification\n\n\n Make dating apps or other method to help single people conveniently meet and connect with like-minded people\n\n\n Hold activitied and interest groups to provide people with opportunities to meet people of same interests."
   }
 ]
