@@ -2,7 +2,7 @@
 title: "In-class Exercise 5"
 author: "SMLurker"
 date: "13 May 2023"
-data_modified: "`r Sys.Date()`"
+date-modified: "`r Sys.Date()`"
 #format: 
 #  html: 
 #    code-fold: true

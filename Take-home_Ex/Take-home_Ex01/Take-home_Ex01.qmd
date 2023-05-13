@@ -2,63 +2,67 @@
 title: "Take-home Exercise 1"
 author: "Wang Shengming"
 date: "06 May 2023"
-data_modified: "`r Sys.Date()`"
+date-modified: "`r Sys.Date()`"
 execute:
   warning: false
   echo: true
   eval: true
 ---
 
-# 1. Setting the Scene
+## 1. Setting the Scene
 
-#### City of Engagement, with a total population of 50,000, is a small city located at Country of Nowhere. The city serves as a service centre of an agriculture region surrounding the city. The main agriculture of the region is fruit farms and vineyards. The local council of the city is in the process of preparing the Local Plan 2023. A sample survey of 1000 representative residents had been conducted to collect data related to their household demographic and spending patterns, among other things. The city aims to use the data to assist with their major community revitalization efforts, including how to allocate a very large city renewal grant they have recently received.
+##### City of Engagement, with a total population of 50,000, is a small city located at Country of Nowhere. The city serves as a service centre of an agriculture region surrounding the city. The main agriculture of the region is fruit farms and vineyards. The local council of the city is in the process of preparing the Local Plan 2023. A sample survey of 1000 representative residents had been conducted to collect data related to their household demographic and spending patterns, among other things. The city aims to use the data to assist with their major community revitalization efforts, including how to allocate a very large city renewal grant they have recently received.
 
-# 2. The Task
+## 2. The Task
 
-#### In this take-home exercise, you are required to apply the concepts and methods you had learned in Lesson 1-4 to reveal the demographic and financial characteristics of the city of Engagement, using appropriate static and interactive statistical graphics methods. This exercise requires a user-friendly and interactive solution that helps city managers and planners to explore the complex data in an engaging way and reveal hidden patterns. The data should be processed by using appropriate tidyverse family of packages and the statistical graphics must be prepared using ggplot2 and its extensions.
+##### In this take-home exercise, you are required to apply the concepts and methods you had learned in Lesson 1-4 to reveal the demographic and financial characteristics of the city of Engagement, using appropriate static and interactive statistical graphics methods. This exercise requires a user-friendly and interactive solution that helps city managers and planners to explore the complex data in an engaging way and reveal hidden patterns. The data should be processed by using appropriate tidyverse family of packages and the statistical graphics must be prepared using ggplot2 and its extensions.
 
-# 3. Data Description
+## 3. Data Description
 
-#### For the purpose of this study, two data sets are provided. They are:
+##### For the purpose of this study, two data sets are provided. They are:
 
-#### Participants.csv
+##### **Participants.csv**: Contains information about the residents of City of Engagement that have agreed to participate in this study.
 
-##### Contains information about the residents of City of Engagement that have agreed to participate in this study.
+::: {.callout-caution collapse="true"}
+## Details of the csv
 
-######   participantId (integer): unique ID assigned to each participant.
+  participantId (integer): unique ID assigned to each participant.
 
-######   householdSize (integer): the number of people in the participant's household
+  householdSize (integer): the number of people in the participant's household
 
-######   haveKids (boolean): whether there are children living in the participant's household.
+  haveKids (boolean): whether there are children living in the participant's household.
 
-######   age (integer): participant's age in years at the start of the study.
+  age (integer): participant's age in years at the start of the study.
 
-######   educationLevel (string factor): the participant's education level, one of: {"Low", "HighSchoolOrCollege", "Bachelors", "Graduate"}
+  educationLevel (string factor): the participant's education level, one of: {"Low", "HighSchoolOrCollege", "Bachelors", "Graduate"}
 
-######   interestGroup (char): a char representing the participant's stated primary interest group, one of {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}. Note: specific topics of interest have been redacted to avoid bias.
+  interestGroup (char): a char representing the participant's stated primary interest group, one of {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"}. Note: specific topics of interest have been redacted to avoid bias.
 
-######   joviality (float): a value ranging from \[0,1\] indicating the participant's overall happiness level at the start of the study.
+  joviality (float): a value ranging from \[0,1\] indicating the participant's overall happiness level at the start of the study.
+:::
 
-#### FinancialJournal.csv
+##### **FinancialJournal.csv**: Contains information about financial transactions.
 
-##### Contains information about financial transactions.
+::: {.callout-caution collapse="true"}
+## Details of the csv
 
-######   participantId (integer): unique ID corresponding to the participant affected
+  participantId (integer): unique ID corresponding to the participant affected
 
-######   timestamp (datetime): the time when the check-in was logged
+  timestamp (datetime): the time when the check-in was logged
 
-######   category (string factor): a string describing the expense category, one of {"Education", "Food", "Recreation", "RentAdjustment", "Shelter", "Wage"}
+  category (string factor): a string describing the expense category, one of {"Education", "Food", "Recreation", "RentAdjustment", "Shelter", "Wage"}
 
-######   amount (double): the amount of the transaction
+  amount (double): the amount of the transaction
+:::
 
 ## 4. Install, launch R packages, load data and build data table
 
-#### Reading the paticipants csv and build interactive paticipants table
+##### 4.1 Reading the participants csv and build interactive paticipants table
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-pacman::p_load(tidyverse,dplyr,DT,plotly, ggdist,gganimate,ggstatsplot,ggiraph)
+pacman::p_load(tidyverse,dplyr,DT,plotly, ggdist,gganimate,ggstatsplot,ggiraph,ggridges, ggthemes)
 ```
 
 ```{r}
@@ -70,7 +74,9 @@ p_data <- read_csv("data/Participants.csv") %>%
 DT::datatable(p_data, class= "compact")
 ```
 
-#### Modify the time style of the financial data, pivot the catogory and regroup, calculate the Savings, and build interactive FinancialJournal table
+##### \ 
+##### 4.2 Modify the time style of the financial data, pivot the catogory and regroup, calculate the Savings, and build interactive FinancialJournal table
+
 
 ```{r}
 #| code-fold: true
@@ -216,10 +222,9 @@ knitr::kable(head(summ), format = 'html')
 
 #### 5.2 Figure out the relationship of householdSize and Joviality
 
-##### From the plotting below, we see that number of householdSize does not have huge effect on the median of Joviality but there is still some slight impact that household with 2 or more people tend to have a middle or low level of joviality while one person are more intend to be either with high or low joviality
+###### From the plotting below, we see that number of householdSize does not have huge effect on the median of Joviality but there is still some slight impact that household with 2 or more people tend to have a middle or low level of joviality while one person are more intend to be either with high or low joviality.
 
 ::: panel-tabset
-
 ## The plot
 
 ```{r}
@@ -239,6 +244,7 @@ ggbetweenstats(
   messages = FALSE
 )
 ```
+
 ## The code
 
 ```{r}
@@ -260,9 +266,9 @@ ggbetweenstats(
 ```
 :::
 
-#### 5.3 Money and Joviality
+#### 5.3 Savings and Joviality
 
-##### from the graph below, we can find that the saving of most people are below 50000 within the study period.
+###### from the graph below, we can find that the saving of most people are below 50000 within the study period.
 
 ```{r}
 #| code-fold: true
@@ -276,57 +282,60 @@ gghistostats(
 )
 ```
 
-#### And by plotting the ralationship of wages and joviality, we can high wages does not really mean for high joviality. 
+###### Consider the Engel's coefficient, which is simply a food budget share, it is used for this purpose by The United Nations (UN), where a coefficient above 59% represents poverty, 50-59% represents a state where daily needs are barely met, 40-50% a moderately well-off standard of living, 30-40% a good standard of living and below 30% a wealthy life. It can be seem here overall the Engel's coefficients of the households do not have significant change, but there are still some household above 60%.
 
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-ggscatterstats(
-  data = df4,
-  x = total_w,
-  y = joviality,
-  marginal = FALSE,
-  )
+df5 <- data.frame(f_data)
+df5$RentAdjustment[df5$RentAdjustment>0] <- 0
+df5 <- df5[df5$timestamp!='2022-03',]
+df5 <- df5[df5$timestamp!='2023-02',]
+df5$cost <- df5$Education+df5$Food+df5$Recreation+df5$Shelter+df5$RentAdjustment
+
+df6 <- df5 %>% group_by(participantId, timestamp) %>% 
+  summarise(mon_saving=sum(Saving),
+            mon_cost=sum(cost),
+            mon_food=sum(Food),
+            .groups = 'drop') %>%
+  as.data.frame()
+
+gg <- ggplot(df6, 
+       aes(x = -mon_food, 
+           y = mon_food/mon_cost, 
+           size = -mon_cost, 
+           colour = participantId)) +
+  geom_point(aes(size = -mon_cost,
+                 frame = timestamp),
+             alpha = 0.7, 
+             show.legend = FALSE) +
+  scale_size(range = c(1, 5)) +
+  labs(x = 'mon_food', 
+       y = 'Engel\'s Coefficient')
+
+ggplotly(gg)
 ```
 
 #### 5.4 InterestGroup and Joviality
 
-##### It seems that most interest groups has a mean joviality value around 0.5 and has similar joviality distribution, but groups like D or H should be paid more attention to.
+###### It seems that most interest groups has a mean joviality value around 0.4 and has similar joviality distribution, but groups like D or H should be paid more attention to. But overall, interest groups promote freedom of expression, explore new perspectives, and allow people of all level of joviality to gather, to share and to express.
 
 ::: panel-tabset
-
 ## The plot
 
 ```{r}
 #| echo: false
-#| fig-width: 4
-#| fig-height: 4
-tooltip <- function(y, ymax, accuracy = .01) {
-  mean <- scales::number(y, accuracy = accuracy)
-  sem <- scales::number(ymax - y, accuracy = accuracy)
-  paste("Mean Joviality scores:", mean, "+/-", sem)
-}
-
-gg_point <- ggplot(data=df4, 
-                   aes(x = interestGroup),
-) +
-  stat_summary(aes(y = joviality, 
-                   tooltip = after_stat(  
-                     tooltip(y, ymax))),  
-    fun.data = "mean_se", 
-    geom = GeomInteractiveCol,  
-    fill = "light blue"
-  ) +
-  stat_summary(aes(y = joviality),
-    fun.data = mean_se,
-    geom = "errorbar", width = 0.2, size = 0.2
-  )+
-  coord_cartesian(ylim=c(0,0.8))
-
-girafe(ggobj = gg_point,
-       width_svg = 8,
-       height_svg = 8*0.618)
+ggplot(df4, 
+       aes(x = interestGroup, 
+           y = joviality)) +
+  stat_halfeye(adjust = 0.5,
+               justification = -0.2,
+               .width = 0,
+               point_colour = NA,
+               slab_fill = "light blue") +
+  geom_boxplot(width = .20,
+               outlier.shape = NA)
 
 ```
 
@@ -334,45 +343,28 @@ girafe(ggobj = gg_point,
 
 ```{r}
 #| eval: false
-#| fig-width: 4
-#| fig-height: 4
-tooltip <- function(y, ymax, accuracy = .01) {
-  mean <- scales::number(y, accuracy = accuracy)
-  sem <- scales::number(ymax - y, accuracy = accuracy)
-  paste("Mean Joviality scores:", mean, "+/-", sem)
-}
-
-gg_point <- ggplot(data=df4, 
-                   aes(x = interestGroup),
-) +
-  stat_summary(aes(y = joviality, 
-                   tooltip = after_stat(  
-                     tooltip(y, ymax))),  
-    fun.data = "mean_se", 
-    geom = GeomInteractiveCol,  
-    fill = "light blue"
-  ) +
-  stat_summary(aes(y = joviality),
-    fun.data = mean_se,
-    geom = "errorbar", width = 0.2, size = 0.2
-  )+
-  coord_cartesian(ylim=c(0,0.8))
-
-girafe(ggobj = gg_point,
-       width_svg = 8,
-       height_svg = 8*0.618)
+ggplot(df4, 
+       aes(x = interestGroup, 
+           y = joviality)) +
+  stat_halfeye(adjust = 0.5,
+               justification = -0.2,
+               .width = 0,
+               point_colour = NA,
+               slab_fill = "light blue") +
+  geom_boxplot(width = .20,
+               outlier.shape = NA)
 
 ```
 :::
-  
-
 
 ## Conclusion
 
-#### Therefore, in order to assist with the major community revitalization efforts, the very large city renewal grant they have recently received should be allocated as below:
+##### Therefore, in order to assist with the major community revitalization efforts, the very large city renewal grant they have recently received should be allocated as below:
 
-###### \ Invest in high-quality teachers, provide resources and support for schools and universities and utilize technology like online learning platforms and educational software to encourage people to gain knowledge and improve education qualification
+######  1.Invest in high-quality teachers, provide resources and support for schools and universities and utilize technology like online learning platforms and educational software to encourage people to gain knowledge and improve education qualification
 
-###### \ Make dating apps, matchmaking services, holding networking events or other method to help single people conveniently meet and connect with like-minded people and find a partner
+######  2.Help poor people to gain more skills and develop working opportunities for them to increase their salary. Increase the overall Engel's Coefficient value to reduce proverty and improve the living condition of households.
 
-###### \ Setup community service, hold activities and interest groups to provide people with opportunities to meet people of same interests.
+######  3.Make dating apps, matchmaking services, holding networking events or other method to help single people conveniently meet and connect with like-minded people and find a partner
+
+######  4.Setup community service, hold activities and interest groups to provide people with opportunities to meet people of same interests.
