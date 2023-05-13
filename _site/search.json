@@ -82,5 +82,19 @@
     "title": "Take-home Exercise 1",
     "section": "Conclusion",
     "text": "Conclusion\n\nTherefore, in order to assist with the major community revitalization efforts, the very large city renewal grant they have recently received should be allocated as below:\n\n Invest in high-quality teachers, provide resources and support for schools and universities and utilize technology like online learning platforms and educational software to encourage people to gain knowledge and improve education qualification\n\n\n Make dating apps, matchmaking services, holding networking events or other method to help single people conveniently meet and connect with like-minded people and find a partner\n\n\n Setup community service, hold activities and interest groups to provide people with opportunities to meet people of same interests."
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05.html",
+    "title": "In-class Exercise 5",
+    "section": "",
+    "text": "pacman::p_load(jsonlite,tidygraph,ggraph, visNetwork,tidyverse)"
+  },
+  {
+    "objectID": "In-class_Ex/In-class_Ex05/In-class_Ex05.html#load-data",
+    "href": "In-class_Ex/In-class_Ex05/In-class_Ex05.html#load-data",
+    "title": "In-class Exercise 5",
+    "section": "Load data",
+    "text": "Load data\n\nMC1 <- jsonlite::fromJSON(\"data/MC1.json\")\n\n\nExpand MC1_nodes\n\nMC1_nodes <- as_tibble(MC1$nodes) %>%\n  select(id, type, country)\n\n\n\nExpand MC1_edges\n\nMC1_edges <- as_tibble(MC1$links) %>%\n  select(source,target,type,weight,key)"
   }
 ]

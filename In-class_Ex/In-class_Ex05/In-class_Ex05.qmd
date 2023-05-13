@@ -1,0 +1,41 @@
+---
+title: "In-class Exercise 5"
+author: "SMLurker"
+date: "13 May 2023"
+data_modified: "`r Sys.Date()`"
+#format: 
+#  html: 
+#    code-fold: true
+#    code-summary: "Show the Code"
+execute: 
+  warning: false
+  echo: true
+  eval: true
+edit: visual
+---
+
+## Install packages
+
+```{r}
+pacman::p_load(jsonlite,tidygraph,ggraph, visNetwork,tidyverse)
+```
+
+## Load data
+
+```{r}
+MC1 <- jsonlite::fromJSON("data/MC1.json")
+```
+
+#### Expand MC1_nodes
+
+```{r}
+MC1_nodes <- as_tibble(MC1$nodes) %>%
+  select(id, type, country)
+```
+
+#### Expand MC1_edges
+
+```{r}
+MC1_edges <- as_tibble(MC1$links) %>%
+  select(source,target,type,weight,key)
+```
