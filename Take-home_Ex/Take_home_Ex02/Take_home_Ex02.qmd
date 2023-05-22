@@ -1,0 +1,223 @@
+---
+title: "Take-home Exercise 2"
+author: "SMLurker"
+date: "18 May 2023"
+execute: 
+  warning: false
+  echo: true
+  eval: true
+edit: visual
+---
+
+## 1. The Task
+
+#### 1.1 Background
+
+##### The country of Oceanus has sought FishEye International's help in identifying companies possibly engaged in illegal, unreported, and unregulated (IUU) fishing. As part of the collaboration, FishEye's analysts received import/export data for Oceanus' marine and fishing industries. However, Oceanus has informed FishEye that the data is incomplete. To facilitate their analysis, FishEye transformed the trade data into a knowledge graph. Using this knowledge graph, they hope to understand business relationships, including finding links that will help them stop IUU fishing and protect marine species that are affected by it. FishEye analysts found that node-link diagrams gave them a good high-level overview of the knowledge graph. However, they are now looking for visualizations that provide more detail about patterns for entities in the knowledge graph. There are two main parts to this analysis.
+
+##### First, FishEye knows from past experience that companies caught fishing illegally will shut down but will then often start up again under a different name. FishEye wants your help to visualize temporal patterns so they can compare the activities of companies over time to determine if the companies have returned to their nefarious acts.
+
+##### Second, FishEye has been using several tools, including artificial intelligence, to reason on the knowledge graph and suggest links that could extend the dataset. They have supplied 12 groups of link suggestions and need your help evaluating these groups to identify which tools are most reliable for completing the graph. FishEye is especially interested in identifying new temporal patterns or anomalies that are only present when new links are added.
+
+##### Using visual analytics, can you help FishEye identify companies that may be engaged in illegal fishing?
+
+#### 1.2 Introduction
+
+##### With reference to bullet point 1 of Mini Challenge 2 of VAST Challenge 2023, it will be studied that:
+
+###### \  Use visual analytics to identify temporal patterns for individual entities and between entities in the knowledge graph FishEye created from trade records. Categorize the types of business relationship patterns you find. Limit your response to 600 words and 6 images.
+
+
+## 2.Install packages, load data and data wrangling
+
+```{r}
+pacman::p_load(jsonlite,tidygraph, visNetwork,
+               igraph, ggraph, tidyr, ggstatsplot,
+               lubridate, clock,plotly, gganimate,ungeviz, plotly, crosstalk,
+               DT, ggdist, ggridges,
+               colorspace,
+               tidyverse, graphlayouts)
+```
+
+```{r}
+MC2 <- jsonlite::fromJSON("data/mc2_challenge_graph.json")
+```
+
+#### 2.1 Expand MC2 nodes and links
+
+```{r}
+MC2_nodes <- as_tibble(MC2$nodes) %>%
+  distinct() %>%
+  select(id, shpcountry, rcvcountry)
+
+MC2_links <- as_tibble(MC2$links) %>%
+  select(source, target, arrivaldate, hscode, valueofgoods_omu, volumeteu, weightkg, valueofgoodsusd) %>%
+  distinct()
+```
+
+#### 2.2 Reviewing the imported data
+
+##### Nodes
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+glimpse(MC2_nodes)
+```
+##### Edges
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+glimpse(MC2_links)
+```
+#### 2.3 Data wangling
+
+##### aggregate edges based on source, target and year of arrival
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+MC2_links$arrivalyear <-  format(as.Date(MC2_links$arrivaldate),"%Y")
+MC2_edges <- MC2_links %>% group_by(source,target,arrivalyear) %>% 
+  summarise(count_hscode=n_distinct(hscode),
+            sum_omu=sum(valueofgoods_omu),
+            sum_teu=sum(volumeteu),
+            sum_weightkg=sum(weightkg),
+            sum_usd=sum(valueofgoodsusd),.groups = 'drop') %>%
+  as.data.frame()
+
+```
+
+##### Preparation for aggregated nodes and edges
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+MC2_edges_aggregated <- MC2_edges %>%
+  left_join(MC2_nodes, by = c("source" = "id")) %>%
+  rename(from = source) %>%
+  left_join(MC2_nodes, by = c("target" = "id")) %>%
+  rename(to = target) %>%
+  group_by(from, to) %>%
+    summarise(weight = n()) %>%
+  filter(from!=to) %>%
+  filter(weight > 1) %>%
+  ungroup()
+MC2_nodes_aggregated <- MC2_nodes %>%
+  filter(id %in% c(MC2_edges_aggregated$from, MC2_edges_aggregated$to))
+
+```
+
+
+#### 2.4 Plot the graph
+
+##### randomly sample some edges and nodes since there are too many edges and nodes.
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+#| #| code-fold: true
+#| code-summary: "Show the code"
+set.seed(123)
+edges <- MC2_edges_aggregated %>% sample_frac(0.005)
+nodes <- MC2_nodes %>%
+  filter(id %in% c(edges$from, edges$to))
+visNetwork(nodes,
+           edges) %>%
+  visIgraphLayout(layout = "layout_with_fr")
+```
+
+## 3. Visualization and Analysis
+
+
+#### Comparison of distribution of mean avg_weightkg records that have 1-7 years of history. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+MC2_edges_1 <- MC2_edges %>% group_by(source,target) %>% 
+  summarise(No_of_year=n_distinct(arrivalyear),
+            avg_valueofgoods_omu=mean(sum_omu),
+            avg_weightkg=mean(sum_weightkg),.groups = 'drop') %>%
+  #inner_join(edges, by = c("source"="from","target"="to")) %>%
+  as.data.frame()
+
+my_sum <- MC2_edges_1 %>%
+  group_by(No_of_year) %>%
+  summarise(
+    n=n(),
+    mean=mean(avg_weightkg),
+    sd=sd(avg_weightkg)
+    ) %>%
+  mutate(se=sd/sqrt(n-1))
+
+ggplot(my_sum) +
+  geom_errorbar(
+    aes(x=No_of_year, 
+        ymin=mean-se, 
+        ymax=mean+se), 
+    width=0.2, 
+    colour="black", 
+    alpha=0.9, 
+    size=0.5) +
+  geom_point(aes
+           (x=No_of_year, 
+            y=mean), 
+           stat="identity", 
+           color="red",
+           size = 1.5,
+           alpha=1) +
+  ggtitle("Standard error of mean avg_weightkg score by No_of_year")
+```
+
+#### Plotting of valueofgoods_omu vs avg_weightkg
+
+```{r}
+MC2_edges_2 <- MC2_edges %>% group_by(source,target) %>% 
+  summarise(No_of_year=n_distinct(arrivalyear),
+            total_valueofgoods_omu=sum(sum_omu),
+            total_weightkg=sum(sum_weightkg),.groups = 'drop') %>%
+  inner_join(MC2_nodes, by = c("source"="id")) %>%
+  as.data.frame()
+MC2_edges_2 <- MC2_edges_2[MC2_edges_2$shpcountry=="Oceanus",]
+
+ggscatterstats(
+  data = MC2_edges_2,
+  x = total_weightkg,
+  y = total_valueofgoods_omu,
+  marginal = FALSE,
+  )
+```
+
+#### Filtering nodes with shpcountry = "Oceanus"
+
+```{r}
+MC2_edges_3 <- MC2_edges %>% group_by(source,target) %>% 
+  summarise(No_of_year=n_distinct(arrivalyear),
+            avg_valueofgoods_omu=mean(sum_omu),
+            avg_weightkg=mean(sum_weightkg),.groups = 'drop') %>%
+  as.data.frame()
+MC2_edges_4 <- edges %>%
+  inner_join(MC2_edges_3, by = c("from"="source","to"="target")) %>%
+  as.data.frame()
+
+newnodes <- nodes %>%
+  mutate(
+    shpcountry = if_else(shpcountry == "Oceanus", shpcountry, "Others"),
+  ) %>%
+  rename(group = shpcountry)
+
+visNetwork(newnodes,
+           MC2_edges_4) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visOptions(highlightNearest = TRUE,
+             nodesIdSelection = TRUE) %>%
+  visLegend() %>%
+  visLayout(randomSeed = 123)
+```
+
+```{r}
+MC2_edges_5 <- MC2_edges_4 %>%
+  inner_join(newnodes, by = c("from"="id")) %>%
+  as.data.frame()
+MC2_edges_6 <- MC2_edges_5[MC2_edges_5$shpcountry=="Oceanus",]
+MC2_edges_6
+```
