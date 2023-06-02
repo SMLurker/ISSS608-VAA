@@ -25,8 +25,7 @@ edit: visual
 
 ##### With reference to bullet point 1 of Mini Challenge 2 of VAST Challenge 2023, it will be studied that:
 
-###### \  Use visual analytics to identify temporal patterns for individual entities and between entities in the knowledge graph FishEye created from trade records. Categorize the types of business relationship patterns you find. Limit your response to 600 words and 6 images.
-
+######   Use visual analytics to identify temporal patterns for individual entities and between entities in the knowledge graph FishEye created from trade records. Categorize the types of business relationship patterns you find. Limit your response to 600 words and 6 images.
 
 ## 2.Install packages, load data and data wrangling
 
@@ -57,16 +56,18 @@ MC2_links <- as_tibble(MC2$links) %>%
   distinct()
 ```
 
-
 #### 2.3 Reviewing the imported data
 
 ##### Nodes
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 glimpse(MC2_nodes)
 ```
+
 ##### Edges
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -93,7 +94,6 @@ MC2_edges_aggregated <- MC2_links %>%
   ungroup()
 MC2_nodes_aggregated <- MC2_nodes %>%
   filter(id %in% c(MC2_edges_aggregated$from, MC2_edges_aggregated$to))
-
 ```
 
 ```{r}
@@ -103,7 +103,6 @@ DT::datatable(MC2_nodes_aggregated, class= "compact")
 ```{r}
 DT::datatable(MC2_edges_aggregated, class= "compact")
 ```
-
 
 ##### 2.4.2 Plot the graph
 
@@ -167,7 +166,7 @@ bp
 
 ```
 
-#### Comparison of distribution of mean avg_price records that have 1-7 years of history. 
+#### Comparison of distribution of mean avg_price records that have 1-7 years of history.
 
 ##### Here we pay attention to a yearly change in below and we found that companies that has only 1 year of record has the highest avg_price. Considering if a company is legally fishing, mostly they will form a long relationship with collaborators and the price is reasonable. But for companies that are caught illegal fishing or shut down, the price are more likely to be higher than the market and their record histories are also short.
 
@@ -225,6 +224,7 @@ ggplot(my_sum) +
            alpha=1) +
   ggtitle("Standard error of mean avg_price score by No_of_year")
 ```
+
 ##### Stats table
 
 ```{r}
@@ -236,6 +236,7 @@ knitr::kable(my_sum, format = 'html')
 #### Further analysis on short-history edges
 
 ##### Here we filter with year=1 and plot out 10%
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -259,13 +260,11 @@ visNetwork(MC2_nodes_2_aggregated,
                          type = "curvedCW"))
 ```
 
-##### the top 10% vertices based on their eigenvector centrality score 
+##### the top 10% vertices based on their eigenvector centrality score
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-#| fig-width: 10
-#| fig-height: 10
 cgraph <- graph_from_data_frame (MC2_edges_2_aggregated,
                            vertices = MC2_nodes_2_aggregated) %>%
   as_tbl_graph()
@@ -296,7 +295,8 @@ V(cgraph_aggregated)$label <- ifelse (V(cgraph_aggregated)$size*0.065 > quantile
 plot(cgraph_aggregated, edge.arrow.size=0.25,edge.arrow.mode = "-", vertex.label = V(cgraph_aggregated)$label, vertex.label.cex = 0.65, vertex.label.font = 1, main = "Which IDs has the most shipments within 1 year?" ) 
 
 ```
-##### Here we have the attributes of the top 10% vertices based on the updated EigenVector Centrality. 
+
+##### Here we have the attributes of the top 10% vertices based on the updated EigenVector Centrality.
 
 ```{r}
 #| code-fold: true
@@ -316,7 +316,4 @@ plot(cgraph_aggregated, edge.arrow.size=0.25,edge.arrow.mode = "-", vertex.label
 
 ```
 
-#### Here according to the results above, we can make an hypothesis that since FishEye knows from past experience that companies caught fishing illegally will shut down but will then often start up again under a different name, and we find out that companies that have only 1 year of transactions history ofter have the highest avg_price, it is very likely that among these, the trade records may have problems. And we focus on top 10% as it is weird that these companies disappeared in the second year if they fish legally since the trade record is more frequent. These companies and records should be well-studied to further find out more IUU fishing behaviors.
-
-
-
+##### Here according to the results above, we can make an hypothesis that since FishEye knows from past experience that companies caught fishing illegally will shut down but will then often start up again under a different name, and we find out that companies that have only 1 year of transactions history ofter have the highest avg_price, it is very likely that among these, the trade records may have problems. And we focus on top 10% as it is weird that these companies disappeared in the second year if they fish legally since the trade record is more frequent. These companies and records should be well-studied to further find out more IUU fishing behaviors.
