@@ -30,20 +30,20 @@ edit: visual
 
 ## 2.Install packages, load data and data wrangling
 
+#### 2.1 Load packages and data
+
 ```{r}
 pacman::p_load(jsonlite,tidygraph, visNetwork,
-               igraph, ggraph, tidyr, ggstatsplot,
-               lubridate, clock,plotly, gganimate,ungeviz, plotly, crosstalk,
-               DT, ggdist, ggridges,
-               colorspace,
-               tidyverse, graphlayouts)
+               ggraph, tidyr, ggstatsplot,
+               lubridate, plotly, gganimate, plotly,igraph,
+               DT, tidyverse)
 ```
 
 ```{r}
 MC2 <- jsonlite::fromJSON("data/mc2_challenge_graph.json")
 ```
 
-#### 2.1 Expand MC2 nodes and links
+#### 2.2 Expand MC2 nodes and links
 
 ```{r}
 MC2_nodes <- as_tibble(MC2$nodes) %>%
@@ -51,11 +51,14 @@ MC2_nodes <- as_tibble(MC2$nodes) %>%
   select(id, shpcountry, rcvcountry)
 
 MC2_links <- as_tibble(MC2$links) %>%
-  select(source, target, arrivaldate, hscode, valueofgoods_omu, volumeteu, weightkg, valueofgoodsusd) %>%
+  mutate(ArrivalDate = ymd(arrivaldate)) %>%
+  mutate(Year = year(ArrivalDate)) %>%
+  select(source, target, arrivaldate, Year, hscode, valueofgoods_omu, volumeteu, weightkg, valueofgoodsusd) %>%
   distinct()
 ```
 
-#### 2.2 Reviewing the imported data
+
+#### 2.3 Reviewing the imported data
 
 ##### Nodes
 ```{r}
@@ -69,83 +72,138 @@ glimpse(MC2_nodes)
 #| code-summary: "Show the code"
 glimpse(MC2_links)
 ```
-#### 2.3 Data wangling
 
-##### aggregate edges based on source, target and year of arrival
-```{r}
-#| code-fold: true
-#| code-summary: "Show the code"
-MC2_links$arrivalyear <-  format(as.Date(MC2_links$arrivaldate),"%Y")
-MC2_edges <- MC2_links %>% group_by(source,target,arrivalyear) %>% 
-  summarise(count_hscode=n_distinct(hscode),
-            sum_omu=sum(valueofgoods_omu),
-            sum_teu=sum(volumeteu),
-            sum_weightkg=sum(weightkg),
-            sum_usd=sum(valueofgoodsusd),.groups = 'drop') %>%
-  as.data.frame()
+#### 2.4 Data preview
 
-```
-
-##### Preparation for aggregated nodes and edges
+##### 2.4.1 Preparation for aggregated nodes and edges and select an example hscode and year to create a graph
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-MC2_edges_aggregated <- MC2_edges %>%
+MC2_edges_aggregated <- MC2_links %>%
   left_join(MC2_nodes, by = c("source" = "id")) %>%
   rename(from = source) %>%
   left_join(MC2_nodes, by = c("target" = "id")) %>%
   rename(to = target) %>%
+  filter(hscode=="306170" & Year=="2028")%>%
   group_by(from, to) %>%
     summarise(weight = n()) %>%
   filter(from!=to) %>%
-  filter(weight > 1) %>%
+  filter(weight > 20) %>%
   ungroup()
 MC2_nodes_aggregated <- MC2_nodes %>%
   filter(id %in% c(MC2_edges_aggregated$from, MC2_edges_aggregated$to))
 
 ```
 
-
-#### 2.4 Plot the graph
-
-##### randomly sample some edges and nodes since there are too many edges and nodes.
-
 ```{r}
-#| fig-width: 8
-#| fig-height: 8
-#| #| code-fold: true
-#| code-summary: "Show the code"
-set.seed(123)
-edges <- MC2_edges_aggregated %>% sample_frac(0.005)
-nodes <- MC2_nodes %>%
-  filter(id %in% c(edges$from, edges$to))
-visNetwork(nodes,
-           edges) %>%
-  visIgraphLayout(layout = "layout_with_fr")
+DT::datatable(MC2_nodes_aggregated, class= "compact")
 ```
 
-## 3. Visualization and Analysis
+```{r}
+DT::datatable(MC2_edges_aggregated, class= "compact")
+```
 
 
-#### Comparison of distribution of mean avg_weightkg records that have 1-7 years of history. 
+##### 2.4.2 Plot the graph
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
-MC2_edges_1 <- MC2_edges %>% group_by(source,target) %>% 
-  summarise(No_of_year=n_distinct(arrivalyear),
-            avg_valueofgoods_omu=mean(sum_omu),
+#set.seed(123)
+#edges <- MC2_edges_aggregated #%>% sample_frac(0.005)
+#nodes <- MC2_nodes %>%
+  #filter(id %in% c(edges$from, edges$to))
+visNetwork(MC2_nodes_aggregated,
+           MC2_edges_aggregated ) %>%
+  visIgraphLayout(layout = "layout_with_fr") %>%
+  visEdges(arrows = "to", 
+           smooth = list(enabled = TRUE, 
+                         type = "curvedCW"))
+```
+
+## 3. Visualization and Analysis
+
+#### An overview of the temporal change of sampled edges within 2028 to 2034
+
+##### Here we extract the edge data and group by year-month, and we can see the changes of the sum of weight and value_usd on a monthly changed base.Mostly the sum of weight is below 100k and value_usd below 0.6M.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+MC2_links$arrivalym <-  format(as.Date(MC2_links$arrivaldate),"%Y-%m")
+MC2_edges_5 <- MC2_links %>% group_by(source,target,arrivalym) %>% 
+  summarise(count_hscode=n_distinct(hscode),
+            sum_omu=sum(valueofgoods_omu),
+            sum_teu=sum(volumeteu),
+            sum_weightkg=sum(weightkg),
+            sum_usd=sum(valueofgoodsusd),.groups = 'drop') %>%
+  
+  as.data.frame()
+MC2_edges_5 <- MC2_edges_5[complete.cases(MC2_edges_5[ , c('sum_weightkg', 'sum_usd')]), ]
+set.seed(123)
+MC2_nodes_5 <- MC2_nodes %>%
+  filter(id %in% MC2_edges_5$source) %>% sample_frac(0.005)
+MC2_edges_6 <- MC2_edges_5 %>%
+  filter(MC2_edges_5$source %in% MC2_nodes_5$id) %>%
+  filter(sum_weightkg< 2000000) %>%
+  filter(sum_usd< 1000000)
+
+  
+bp <- MC2_edges_6 %>%
+  plot_ly(x = ~sum_weightkg, 
+          y = ~sum_usd, 
+          size = ~sum_weightkg, 
+          color = ~source,
+          sizes = c(2, 100),
+          frame = ~arrivalym, 
+          text = ~target, 
+          hoverinfo = "text",
+          type = 'scatter',
+          mode = 'markers'
+          ) %>%
+  layout(showlegend = FALSE)
+bp
+
+```
+
+#### Comparison of distribution of mean avg_price records that have 1-7 years of history. 
+
+##### Here we pay attention to a yearly change in below and we found that companies that has only 1 year of record has the highest avg_price. Considering if a company is legally fishing, mostly they will form a long relationship with collaborators and the price is reasonable. But for companies that are caught illegal fishing or shut down, the price are more likely to be higher than the market and their record histories are also short.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+MC2_edges <- MC2_links[complete.cases(MC2_links[ , c('hscode','valueofgoodsusd','volumeteu')]), ] %>% 
+  filter(hscode == "306170") %>%
+  filter(weightkg != 0 ) %>% 
+  mutate(price = valueofgoodsusd/weightkg)
+
+MC2_edges_1 <- MC2_edges %>% 
+  group_by(source,target,Year) %>% 
+  summarise(No_of_time=n(),
+            sum_omu=sum(valueofgoods_omu),
+            sum_teu=sum(volumeteu),
+            sum_weightkg=sum(weightkg),
+            sum_usd=sum(valueofgoodsusd),
+            mean_price=mean(price),.groups = 'drop') %>%
+  as.data.frame()
+
+MC2_edges_2 <- MC2_edges_1 %>% group_by(source,target) %>% 
+  summarise(No_of_year=n_distinct(Year),
+            avg_not=mean(No_of_time),
+            avg_price=mean(mean_price),
             avg_weightkg=mean(sum_weightkg),.groups = 'drop') %>%
   #inner_join(edges, by = c("source"="from","target"="to")) %>%
   as.data.frame()
 
-my_sum <- MC2_edges_1 %>%
+
+my_sum <- MC2_edges_2 %>%
   group_by(No_of_year) %>%
   summarise(
     n=n(),
-    mean=mean(avg_weightkg),
-    sd=sd(avg_weightkg)
+    mean=mean(avg_price),
+    sd=sd(avg_price)
     ) %>%
   mutate(se=sd/sqrt(n-1))
 
@@ -165,59 +223,100 @@ ggplot(my_sum) +
            color="red",
            size = 1.5,
            alpha=1) +
-  ggtitle("Standard error of mean avg_weightkg score by No_of_year")
+  ggtitle("Standard error of mean avg_price score by No_of_year")
 ```
-
-#### Plotting of valueofgoods_omu vs avg_weightkg
+##### Stats table
 
 ```{r}
-MC2_edges_2 <- MC2_edges %>% group_by(source,target) %>% 
-  summarise(No_of_year=n_distinct(arrivalyear),
-            total_valueofgoods_omu=sum(sum_omu),
-            total_weightkg=sum(sum_weightkg),.groups = 'drop') %>%
-  inner_join(MC2_nodes, by = c("source"="id")) %>%
-  as.data.frame()
-MC2_edges_2 <- MC2_edges_2[MC2_edges_2$shpcountry=="Oceanus",]
-
-ggscatterstats(
-  data = MC2_edges_2,
-  x = total_weightkg,
-  y = total_valueofgoods_omu,
-  marginal = FALSE,
-  )
+#| code-fold: true
+#| code-summary: "Show the code"
+knitr::kable(my_sum, format = 'html')
 ```
 
-#### Filtering nodes with shpcountry = "Oceanus"
+#### Further analysis on short-history edges
 
+##### Here we filter with year=1 and plot out 10%
 ```{r}
-MC2_edges_3 <- MC2_edges %>% group_by(source,target) %>% 
-  summarise(No_of_year=n_distinct(arrivalyear),
-            avg_valueofgoods_omu=mean(sum_omu),
-            avg_weightkg=mean(sum_weightkg),.groups = 'drop') %>%
-  as.data.frame()
-MC2_edges_4 <- edges %>%
-  inner_join(MC2_edges_3, by = c("from"="source","to"="target")) %>%
-  as.data.frame()
+#| code-fold: true
+#| code-summary: "Show the code"
+MC2_edges_2_aggregated <- MC2_edges_2 %>%
+  left_join(MC2_nodes, by = c("source" = "id")) %>%
+  rename(from = source) %>%
+  left_join(MC2_nodes, by = c("target" = "id")) %>%
+  rename(to = target) %>%
+  filter(No_of_year==1)%>%
+  filter(from!=to) %>%
+  filter(avg_not>5)%>%
+  ungroup()
+MC2_nodes_2_aggregated <- MC2_nodes %>%
+  filter(id %in% c(MC2_edges_2_aggregated$from, MC2_edges_2_aggregated$to))
 
-newnodes <- nodes %>%
-  mutate(
-    shpcountry = if_else(shpcountry == "Oceanus", shpcountry, "Others"),
-  ) %>%
-  rename(group = shpcountry)
-
-visNetwork(newnodes,
-           MC2_edges_4) %>%
+visNetwork(MC2_nodes_2_aggregated,
+           MC2_edges_2_aggregated ) %>%
   visIgraphLayout(layout = "layout_with_fr") %>%
-  visOptions(highlightNearest = TRUE,
-             nodesIdSelection = TRUE) %>%
-  visLegend() %>%
-  visLayout(randomSeed = 123)
+  visEdges(arrows = "to", 
+           smooth = list(enabled = TRUE, 
+                         type = "curvedCW"))
 ```
 
+##### the top 10% vertices based on their eigenvector centrality score 
+
 ```{r}
-MC2_edges_5 <- MC2_edges_4 %>%
-  inner_join(newnodes, by = c("from"="id")) %>%
-  as.data.frame()
-MC2_edges_6 <- MC2_edges_5[MC2_edges_5$shpcountry=="Oceanus",]
-MC2_edges_6
+#| code-fold: true
+#| code-summary: "Show the code"
+#| fig-width: 10
+#| fig-height: 10
+cgraph <- graph_from_data_frame (MC2_edges_2_aggregated,
+                           vertices = MC2_nodes_2_aggregated) %>%
+  as_tbl_graph()
+quantile_graph <- quantile(eigen_centrality(cgraph)$vector,
+         probs = seq(0, 1, 1/10)
+         )
+V(cgraph)$size = eigen_centrality(cgraph)$vector
+
+cgraph_aggregated <- delete_vertices(cgraph, V(cgraph)[size < quantile_graph[10]])
+
+
+set.seed (1234)
+layout1 <- layout_with_fr(cgraph_aggregated)
+
+quantile_graph_aggregated <- quantile(V(cgraph_aggregated)$size, #identify top 10% of the new vertices
+         probs = seq(0, 1, 1/10)
+         )
+
+
+V(cgraph_aggregated)$color <- ifelse (V(cgraph_aggregated)$size > quantile_graph_aggregated[10], "darkgoldenrod3", "azure3") #color yellow if vertices is top 10%
+E(cgraph_aggregated)$color <- "grey"
+V(cgraph_aggregated)$size <- V(cgraph_aggregated)$size/0.065 
+#Increase the size of nodes based on their centrality score, only those with high score will be visible
+
+V(cgraph_aggregated)$label <- ifelse (V(cgraph_aggregated)$size*0.065 > quantile_graph_aggregated[10],V(cgraph_aggregated)$name,NA)
+#label the vertices if vertices belongs to the top 10%
+
+plot(cgraph_aggregated, edge.arrow.size=0.25,edge.arrow.mode = "-", vertex.label = V(cgraph_aggregated)$label, vertex.label.cex = 0.65, vertex.label.font = 1, main = "Which IDs has the most shipments within 1 year?" ) 
+
 ```
+##### Here we have the attributes of the top 10% vertices based on the updated EigenVector Centrality. 
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+vertex_attr(cgraph_aggregated, index = V(cgraph_aggregated)$size*0.065 > quantile_graph_aggregated[10])
+```
+
+##### detect possible cluster based on the betweeness score of the vertices
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+GNC <- cluster_edge_betweenness(cgraph_aggregated, weights = NULL)
+V(cgraph_aggregated)$color <-membership(GNC)              
+cgraph_aggregated$palette <- diverging_pal(length(GNC)) 
+plot(cgraph_aggregated, edge.arrow.size=0.25,edge.arrow.mode = "-", vertex.label = NA, main = "How many Social Groups within the category?")
+
+```
+
+#### Here according to the results above, we can make an hypothesis that since FishEye knows from past experience that companies caught fishing illegally will shut down but will then often start up again under a different name, and we find out that companies that have only 1 year of transactions history ofter have the highest avg_price, it is very likely that among these, the trade records may have problems. And we focus on top 10% as it is weird that these companies disappeared in the second year if they fish legally since the trade record is more frequent. These companies and records should be well-studied to further find out more IUU fishing behaviors.
+
+
+
