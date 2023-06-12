@@ -1,17 +1,37 @@
 ---
 title: "Take-home Exercise 3"
 author: "SMLurker"
+execute: 
+  warning: false
+  echo: true
+  eval: true
+edit: visual
 ---
 
+# Getting Started
+
+## Background
+
+##### FishEye International, a non-profit focused on countering illegal, unreported, and unregulated (IUU) fishing, has been given access to an international finance corporation's database on fishing related companies. In the past, FishEye has determined that companies with anomalous structures are far more likely to be involved in IUU (or other "fishy" business). FishEye has transformed the database into a knowledge graph. It includes information about companies, owners, workers, and financial status. FishEye is aiming to use this graph to identify anomalies that could indicate a company is involved in IUU.
+
+##### FishEye analysts have attempted to use traditional node-link visualizations and standard graph analyses, but these were found to be ineffective because the scale and detail in the data can obscure a business's true structure. Can you help FishEye develop a new visual analytics approach to better understand fishing business anomalies?
+
+## Data Wrangling
+
+#### Importing R pacakges
+
 ```{r}
-pacman::p_load(jsonlite,tidygraph,ggraph,visNetwork,graphlayouts,ggforce,tidytext,tidyverse)
+pacman::p_load(jsonlite,tidygraph,ggraph,visNetwork,graphlayouts,ggforce,skimr, 
+               tidytext,tidyverse)
 ```
 
-## Importing JSON file by using jsonlite packages
+#### Importing JSON file by using jsonlite packages
 
 ```{r}
 mc3_data <- fromJSON("data/MC3.json")
 ```
+
+#### Extracting edges
 
 ```{r}
 mc3_edges <- as_tibble(mc3_data$links) %>%
@@ -25,13 +45,197 @@ mc3_edges <- as_tibble(mc3_data$links) %>%
   ungroup()
 ```
 
+#### Extracting nodes
+
 ```{r}
 mc3_nodes <- as_tibble(mc3_data$nodes) %>%
   mutate(country = as.character(country),
-         id =  as.character(id),
+         id = as.character(id),
          product_services = as.character(product_services),
          revenue_omu = as.numeric(as.character(revenue_omu)),
          type = as.character(type)) %>%
   select(id, country, type, revenue_omu, product_services)
 ```
 
+#### Exploring the edges data frame
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+skim(mc3_edges)
+```
+
+##### Edge table
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+DT::datatable(mc3_edges)
+```
+
+##### Plotting by type
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+ggplot(data = mc3_edges,
+       aes(x = type)) +
+  geom_bar()
+```
+
+#### Exploring the nodes data frame
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+skim(mc3_nodes)
+```
+
+##### Node table
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+DT::datatable(mc3_nodes)
+```
+
+##### Plotting by type
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+ggplot(data = mc3_nodes,
+       aes(x = type)) +
+  geom_bar()
+```
+
+## Visualisation and Analysis
+
+#### Building network model
+
+```{r}
+id1 <- mc3_edges %>%
+  select(source) %>%
+  rename(id = source)
+id2 <- mc3_edges %>%
+  select(target) %>%
+  rename(id = target)
+mc3_nodes1 <- rbind(id1, id2) %>%
+  distinct() %>%
+  left_join(mc3_nodes,
+            unmatched = "drop")
+```
+
+```{r}
+mc3_graph <- tbl_graph(nodes = mc3_nodes1,
+                       edges = mc3_edges,
+                       directed = FALSE) %>%
+  mutate(betweenness_centrality = centrality_betweenness(),
+         closeness_centrality = centrality_closeness())
+
+mc3_graph %>%
+  filter(betweenness_centrality >= 100000) %>%
+ggraph(layout = "fr") +
+  geom_edge_link(aes(alpha=0.5)) +
+  geom_node_point(aes(
+    size = betweenness_centrality,
+    colors = "lightblue",
+    alpha = 0.5)) +
+  scale_size_continuous(range=c(1,10))+
+  theme_graph()
+```
+
+#### Text Sensing
+
+##### Simple word count
+
+```{r}
+mc3_nodes %>% 
+    mutate(n_fish = str_count(product_services, "fish")) 
+```
+
+##### Tokenisation
+
+```{r}
+token_nodes <- mc3_nodes %>%
+  unnest_tokens(word, 
+                product_services)
+
+token_nodes %>%
+  count(word, sort = TRUE) %>%
+  top_n(15) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+      labs(x = "Count",
+      y = "Unique words",
+      title = "Count of unique words found in product_services field")
+```
+
+##### Removing stopwords
+
+```{r}
+stopwords_removed <- token_nodes %>% 
+  anti_join(stop_words) %>%
+  filter(word %in% c("seafood","fish","carp","catfish","herring","mackerel","pollock","salmon","shark","tuna"))
+stopwords_removed %>%
+  count(word, sort = TRUE) %>%
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  xlab(NULL) +
+  coord_flip() +
+      labs(x = "Count",
+      y = "Unique words",
+      title = "Count of unique words found in product_services field")
+```
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+ggplot(data = stopwords_removed,
+       aes(x = type)) +
+  geom_bar()+
+  geom_text(stat="count", 
+      aes(label=paste0(..count..)),vjust=-1)+
+  ylim(0,2250)
+```
+
+```{r}
+stopwords_removed[stopwords_removed$type=="Company Contacts",]
+```
+
+```{r}
+cleaned_edges <- mc3_edges %>%
+  filter(source %in% stopwords_removed$id)
+
+id3 <- cleaned_edges %>%
+  select(source) %>%
+  rename(id = source)
+id4 <- cleaned_edges %>%
+  select(target) %>%
+  rename(id = target)
+cleaned__nodes <- rbind(id3, id4) %>%
+  distinct() %>%
+  left_join(mc3_nodes,
+            unmatched = "drop")
+
+cleaned_graph <- tbl_graph(nodes = cleaned__nodes,
+                       edges = cleaned_edges,
+                       directed = FALSE) %>%
+  mutate(betweenness_centrality = centrality_betweenness(),
+         closeness_centrality = centrality_closeness())
+
+cleaned_graph %>%
+  filter(betweenness_centrality >= 10) %>%
+ggraph(layout = "fr") +
+  geom_edge_link(aes(alpha=0.5)) +
+  geom_node_point(aes(
+    size = betweenness_centrality,
+    colors = "lightblue",
+    alpha = 0.5)) +
+  scale_size_continuous(range=c(1,10))+
+  theme_graph()
+```

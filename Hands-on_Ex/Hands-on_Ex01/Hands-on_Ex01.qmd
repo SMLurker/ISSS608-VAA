@@ -3,28 +3,120 @@ title: "Hands-on Exercise 1"
 author: "SMLurker"
 ---
 
-# Getting Started
+# Getting started
 
 ## Install and launching R packages
 
-The code chunk below uses p_load() of pacman package to check if tidyverse packages are installed in the computer. If they are, then they will be launched into R.
-
 ```{r}
+
 pacman::p_load(tidyverse)
 
 ```
 
-## Importing the data
+## Importing data
 
 ```{r}
 exam_data <- read_csv("data/Exam_data.csv")
+```
+
+## Working with the theme
+
+#### Changing the colors of plot panel background of `theme_minimal()` to light blue and the color of grid lines to white.
+
+```{r}
+ggplot(data=exam_data, aes(x=RACE))+geom_bar()+coord_flip()+theme_minimal() +theme(
+  panel.background = element_rect(fill = "lightblue",
+                                colour = "lightblue",
+                                size = 0.5, linetype = "solid"),
+  panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                colour = "white"), 
+  panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                colour = "white")
+)
+```
+
+# Designing Data-drive Graphics for Analysis I
+
+#### A simple vertical bar chart for frequency analysis. Critics:
+
+#### y-axis label is not clear (i.e. count) To support effective comparison, the bars should be sorted by their respective frequencies. For static graph, frequency values should be added to provide addition information.
+
+#### With reference to the critics, create a makeover looks similar to the figure on the right.
+
+```{r}
+ggplot(data=exam_data, aes(x=reorder(RACE,RACE,function(x)-length(x))))+geom_bar()+ylim(0,220)+labs(x = "Race",y="No. of\nPupils") +theme(axis.title.y = element_text(angle = 0, vjust = 1))+geom_text(stat="count", 
+      aes(label=paste0(..count.., ", ", 
+      round(..count../sum(..count..)*100, 1), "%")),
+      vjust=-1)
 
 ```
 
-# Plotting a simple bar chart
+#### or (This code chunk uses [`fct_infreq()`](https://forcats.tidyverse.org/reference/fct_inorder.html) of [**forcats**](https://forcats.tidyverse.org/articles/forcats.html) package)
 
 ```{r}
-ggplot(data=exam_data,
-       aes(x=RACE)) +
-  geom_bar()
+#| eval: false
+exam_data %>%
+  mutate(RACE = fct_infreq(RACE)) %>%
+  ggplot(aes(x = RACE)) + 
+  geom_bar()+
+  ylim(0,220) +
+  geom_text(stat="count", 
+      aes(label=paste0(..count.., ", ", 
+      round(..count../sum(..count..)*100,
+            1), "%")),
+      vjust=-1) +
+  xlab("Race") +
+  ylab("No. of\nPupils") +
+  theme(axis.title.y=element_text(angle = 0))
+```
+
+# Designing Data-drive Graphics for Analysis II
+
+#### Adding mean and median lines on the histogram plot.
+
+#### Change fill color and line color
+
+```{r}
+ggplot(data=exam_data, aes(x=MATHS))+geom_histogram(bins=20,color="black", fill="lightblue")+
+  geom_vline(aes(xintercept=mean(MATHS, na.rm=T)),
+             color="red", 
+             linetype="dashed", 
+             size=1) +
+  geom_vline(aes(xintercept=median(MATHS, na.rm=T)),
+             color="grey30",
+             linetype="dashed", 
+             size=1)
+```
+
+# Designing Data-drive Graphics for Analysis III
+
+#### The histograms reveal the distribution of English scores by gender and the background histograms show the distribution of English scores for all pupils.
+
+```{r}
+d <- exam_data   
+d_bg <- d[, -3]  
+
+ggplot(d, aes(x = ENGLISH, fill = GENDER)) +
+  geom_histogram(data = d_bg, fill = "grey", alpha = .5) +
+  geom_histogram(colour = "black") +
+  facet_wrap(~ GENDER) +
+  scale_fill_manual(values=c("red","blue"))
+  guides(fill = FALSE) +  
+  theme_bw()
+```
+
+# Designing Data-drive Graphics for Analysis IV
+
+```{r}
+ggplot(data=exam_data,aes(x=MATHS,y=ENGLISH))+geom_point()+
+  coord_cartesian(xlim=c(0,100),
+                  ylim=c(0,100)) +
+  geom_hline(yintercept=50,
+             linetype="dashed",
+             color="grey60",
+             size=1) + 
+  geom_vline(xintercept=50, 
+             linetype="dashed",
+             color="grey60",
+             size=1)
 ```
