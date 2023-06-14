@@ -22,7 +22,7 @@ edit: visual
 
 ```{r}
 pacman::p_load(jsonlite,tidygraph,ggraph,visNetwork,graphlayouts,ggforce,skimr, 
-               tidytext,tidyverse)
+               tidytext,tidyverse,ggstatsplot,ggiraph)
 ```
 
 #### Importing JSON file by using jsonlite packages
@@ -176,10 +176,13 @@ token_nodes %>%
 
 ##### Removing stopwords
 
+###### select nodes with "seafood","fish","carp","catfish","herring","mackerel","pollock","salmon","shark","tuna" as part of the product service
+
 ```{r}
 stopwords_removed <- token_nodes %>% 
   anti_join(stop_words) %>%
-  filter(word %in% c("seafood","fish","carp","catfish","herring","mackerel","pollock","salmon","shark","tuna"))
+  filter(word %in% c("seafood","fish","carp","catfish","herring","mackerel","pollock","salmon","shark","tuna")) %>%
+  distinct()
 stopwords_removed %>%
   count(word, sort = TRUE) %>%
   mutate(word = reorder(word, n)) %>%
@@ -191,7 +194,7 @@ stopwords_removed %>%
       y = "Unique words",
       title = "Count of unique words found in product_services field")
 ```
-
+##### Plotting by type
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -199,43 +202,154 @@ ggplot(data = stopwords_removed,
        aes(x = type)) +
   geom_bar()+
   geom_text(stat="count", 
-      aes(label=paste0(..count..)),vjust=-1)+
-  ylim(0,2250)
+      aes(label=paste0(after_stat(count))),vjust=-1)+
+  ylim(0,1500)
 ```
+#### Analyze company type
+
+###### Since from the above, the number of company type is much greater than the other 2 types, we will focus on the company type and find the distribution of revenue_omu
 
 ```{r}
-stopwords_removed[stopwords_removed$type=="Company Contacts",]
+#| code-fold: true
+#| code-summary: "Show the code"
+clean_nodes_c <-stopwords_removed %>%
+  drop_na(revenue_omu) %>%
+  filter(type=="Company")
+
+set.seed(1234)
+
+gghistostats(
+  data = clean_nodes_c,
+  x = revenue_omu,
+  type = "bayes",
+  test.value = 60,
+  xlab = "revenue_omu"
+)
 ```
+###### Most of the companies have a revenue_omu within the first bar, but there are some companies that have far more revenue than others, we select the revenue_omu>400,000
 
 ```{r}
-cleaned_edges <- mc3_edges %>%
-  filter(source %in% stopwords_removed$id)
+#| code-fold: true
+#| code-summary: "Show the code"
+df_nodes <- clean_nodes_c %>% 
+  filter(revenue_omu>200000)
+df_edges <- mc3_edges %>%
+  filter(source %in% df_nodes$id)
 
-id3 <- cleaned_edges %>%
+id3 <- df_edges %>%
   select(source) %>%
   rename(id = source)
-id4 <- cleaned_edges %>%
+id4 <- df_edges %>%
   select(target) %>%
   rename(id = target)
-cleaned__nodes <- rbind(id3, id4) %>%
+df_nodes_1 <- rbind(id3, id4) %>%
   distinct() %>%
   left_join(mc3_nodes,
             unmatched = "drop")
 
-cleaned_graph <- tbl_graph(nodes = cleaned__nodes,
-                       edges = cleaned_edges,
+df_graph <- tbl_graph(nodes = df_nodes_1,
+                       edges = df_edges,
                        directed = FALSE) %>%
   mutate(betweenness_centrality = centrality_betweenness(),
          closeness_centrality = centrality_closeness())
 
-cleaned_graph %>%
-  filter(betweenness_centrality >= 10) %>%
-ggraph(layout = "fr") +
-  geom_edge_link(aes(alpha=0.5)) +
-  geom_node_point(aes(
-    size = betweenness_centrality,
-    colors = "lightblue",
-    alpha = 0.5)) +
-  scale_size_continuous(range=c(1,10))+
-  theme_graph()
+g <- df_graph %>%
+  mutate(betweenness_centrality = centrality_betweenness()) %>%
+  ggraph(layout = "kk") + 
+  geom_edge_link(aes(width=weights), 
+                 alpha=0.2) +
+  scale_edge_width(range = c(0.01, 0.1)) +
+  geom_node_point(aes(colour = country,
+            size=betweenness_centrality))
+g + theme_graph()
 ```
+
+###### The companies in country ZH seems to have a high revenue_omu but they dont have many business partner records
+
+#### Grouping
+
+###### Calculate partner numbers (numbers of targets of a source), and assign partner = -1 if targets dont have a partner record, we only select those with a partner and group them by revenue_omu and partner numbers.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+df_edges_1 <- mc3_edges %>%
+  filter(source %in% clean_nodes_c$id)
+
+df_edges_1r <- df_edges_1 %>%
+  group_by(source) %>%
+  summarize(partners=n_distinct(target)) %>%
+  rename(id=source) %>%
+  ungroup()
+
+df_nodes_2 <- clean_nodes_c %>% 
+  left_join(df_edges_1r) %>%
+  distinct()
+
+df_nodes_2$partners[is.na(df_nodes_2$partners)] <- -1
+
+df_nodes_2$group[(df_nodes_2$partners>quantile(df_nodes_2$partners, 0.5)) & (df_nodes_2$revenue_omu<=quantile(df_nodes_2$revenue_omu, 0.8))] <- 1
+df_nodes_2$group[(df_nodes_2$partners>quantile(df_nodes_2$partners, 0.5)) & (df_nodes_2$revenue_omu>quantile(df_nodes_2$revenue_omu, 0.8))] <- 2
+df_nodes_2$group[(df_nodes_2$partners<=quantile(df_nodes_2$partners, 0.5)) & (df_nodes_2$revenue_omu<=quantile(df_nodes_2$revenue_omu, 0.8))] <- 3
+df_nodes_2$group[(df_nodes_2$partners<=quantile(df_nodes_2$partners, 0.5)) & (df_nodes_2$revenue_omu>quantile(df_nodes_2$revenue_omu, 0.8))] <- 4
+df_nodes_2$group[(df_nodes_2$partners==-1) & (df_nodes_2$revenue_omu<=quantile(df_nodes_2$revenue_omu, 0.8))] <- 5
+df_nodes_2$group[(df_nodes_2$partners==-1) & (df_nodes_2$revenue_omu>quantile(df_nodes_2$revenue_omu, 0.8))] <- 6
+
+
+df_nodes_2 <- df_nodes_2[,!names(df_nodes_2) %in% 
+      c("word")] %>%
+  distinct() 
+
+set.seed(1234)
+
+gghistostats(
+  data = df_nodes_2[df_nodes_2$partners>0,],
+  x = partners,
+  type = "bayes",
+  test.value = 60,
+  xlab = "partners")
+```
+######  visualize the nodes and edges and since Group 5 and 6 dont have partners, they will not appear in the network
+
+```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+df_edges_2 <- mc3_edges %>%
+  filter(source %in% df_nodes_2$id)
+
+id5 <- df_edges_2 %>%
+  select(source) %>%
+  rename(id = source)
+id6 <- df_edges_2 %>%
+  select(target) %>%
+  rename(id = target)
+df_nodes_3 <- rbind(id5, id6) %>%
+  distinct() %>%
+  left_join(mc3_nodes,
+            unmatched = "drop") %>%
+  left_join(df_nodes_2)
+
+
+df_graph_3 <- tbl_graph(nodes = df_nodes_3,
+                       edges = df_edges_2,
+                       directed = FALSE) %>%
+  mutate(betweenness_centrality = centrality_betweenness(),
+         closeness_centrality = centrality_closeness())
+
+g_3 <- df_graph_3 %>%
+  mutate(betweenness_centrality = centrality_betweenness()) %>%
+  ggraph(layout = "kk") + 
+  geom_edge_link(aes(width=weights), 
+                 alpha=0.2) +
+  scale_edge_width(range = c(0.01, 0.1)) +
+  geom_node_point(aes(colour = group,
+            size=betweenness_centrality))
+g_3 + theme_graph()
+
+```
+
+## Conclusion
+
+###### From the above, we should pay attention to Group 4 and 6 since they dont have many partners in business but they have high revenue_omu, which probably because they do not follow the law and do illegal fishing to gain high revenue.
+
+
