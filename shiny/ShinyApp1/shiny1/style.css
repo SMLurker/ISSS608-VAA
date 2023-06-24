@@ -1,0 +1,11 @@
+.navbar1 .navbar{ background-color: #00b8bd;}
+
+.navbar1 .navbar-default .navbar-brand{color: white;}
+
+.navbar1 .tab-panel{ background-color: #00b8bd; color: #00b8bd}
+
+.navbar1 .navbar-nav li a:hover, .navbar1 .navbar-nav > .active > a {
+color: #fff !important;
+background-color:#00b8bd !important;
+background-image: #fff !important;
+}

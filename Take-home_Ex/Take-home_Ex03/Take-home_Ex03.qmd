@@ -194,7 +194,9 @@ stopwords_removed %>%
       y = "Unique words",
       title = "Count of unique words found in product_services field")
 ```
+
 ##### Plotting by type
+
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -205,6 +207,7 @@ ggplot(data = stopwords_removed,
       aes(label=paste0(after_stat(count))),vjust=-1)+
   ylim(0,1500)
 ```
+
 #### Analyze company type
 
 ###### Since from the above, the number of company type is much greater than the other 2 types, we will focus on the company type and find the distribution of revenue_omu
@@ -226,7 +229,8 @@ gghistostats(
   xlab = "revenue_omu"
 )
 ```
-###### Most of the companies have a revenue_omu within the first bar, but there are some companies that have far more revenue than others, we select the revenue_omu>400,000
+
+###### Most of the companies have a revenue_omu within the first bar, but there are some companies that have far more revenue than others, we select the revenue_omu\>400,000
 
 ```{r}
 #| code-fold: true
@@ -309,7 +313,8 @@ gghistostats(
   test.value = 60,
   xlab = "partners")
 ```
-######  visualize the nodes and edges and since Group 5 and 6 dont have partners, they will not appear in the network
+
+###### visualize the nodes and edges and since Group 5 and 6 dont have partners, they will not appear in the network
 
 ```{r}
 #| code-fold: true
@@ -351,5 +356,3 @@ g_3 + theme_graph()
 ## Conclusion
 
 ###### From the above, we should pay attention to Group 4 and 6 since they dont have many partners in business but they have high revenue_omu, which probably because they do not follow the law and do illegal fishing to gain high revenue.
-
-
