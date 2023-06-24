@@ -14,9 +14,9 @@ reactablefmtr, gt, gtExtras, tidyverse)
 
 #### Importing Microsoft Access database
 
-```         
+```{r}         
 library(RODBC)
-con <- odbcConnectAccess('data/Coffee Chain.mdb')
+con <- odbcConnectAccess2007('data/Coffee Chain.mdb')
 coffeechain <- sqlFetch(con, 'CoffeeChain Query')
 write_rds(coffeechain, "data/CoffeeChain.rds")
 odbcClose(con)
@@ -24,8 +24,8 @@ odbcClose(con)
 
 #### Data Preparation
 
-```         
-coffeechain <- read_rds("data/rds/CoffeeChain.rds")
+```{r}         
+coffeechain <- read_rds("data/CoffeeChain.rds")
 product <- coffeechain %>%
   group_by(`Product`) %>%
   summarise(`target` = sum(`Budget Sales`),
@@ -35,7 +35,7 @@ product <- coffeechain %>%
 
 #### Bullet chart in ggplot2
 
-```         
+```{r}         
 ggplot(product, aes(Product, current)) + 
   geom_col(aes(Product, max(target) * 1.01),
            fill="grey85", width=0.85) +
@@ -60,7 +60,7 @@ ggplot(product, aes(Product, current)) +
 
 #### Preparing the data
 
-```         
+```{r}         
 sales_report <- coffeechain %>%
   filter(Date >= "2013-01-01") %>%
   mutate(Month = month(Date)) %>%
@@ -85,7 +85,7 @@ quarts <- sales_report %>%
 
 #### sparklines in ggplot2
 
-```         
+```{r}         
 ggplot(sales_report, aes(x=Month, y=Sales)) + 
   facet_grid(Product ~ ., scales = "free_y") + 
   geom_ribbon(data = quarts, aes(ymin = quart1, max = quart2), 
@@ -110,7 +110,7 @@ ggplot(sales_report, aes(x=Month, y=Sales)) +
 
 #### Plotting a simple bullet chart
 
-```         
+```{r}         
 product %>%
   gt::gt() %>%
   gt_plt_bullet(column = current, 
@@ -125,7 +125,7 @@ product %>%
 
 #### Plotting Coffechain Sales report
 
-```         
+```{r}         
 report <- coffeechain %>%
   mutate(Year = year(Date)) %>%
   filter(Year == "2013") %>%
@@ -150,7 +150,7 @@ report %>%
 
 #### Adding statistics
 
-```         
+```{r}         
 report %>% 
   group_by(Product) %>% 
   summarise("Min" = min(Sales, na.rm = T),
@@ -164,7 +164,7 @@ report %>%
 
 #### Combining the data.frame
 
-```         
+```{r}         
 spark <- report %>%
   group_by(Product) %>%
   summarize('Monthly Sales' = list(Sales), 
@@ -180,7 +180,7 @@ sales_data = left_join(sales, spark)
 
 #### Plotting the updated data.table
 
-```         
+```{r}         
 sales_data %>%
   gt() %>%
   gt_plt_sparkline('Monthly Sales',
@@ -189,7 +189,7 @@ sales_data %>%
 
 #### Combining bullet chart and sparklines
 
-```         
+```{r}         
 bullet <- coffeechain %>%
   filter(Date >= "2013-01-01") %>%
   group_by(`Product`) %>%
@@ -211,18 +211,18 @@ sales_data %>%
 
 ## Interactive Information Dashboard Design: reactable and reactablefmtr methods
 
-```         
+```{r}         
 #| warning: false
 remotes::install_github("timelyportfolio/dataui")
 ```
 
-```         
+```{r}         
 library(dataui)
 ```
 
 #### Plotting interactive sparklines
 
-```         
+```{r}         
 report <- report %>%
   group_by(Product) %>%
   summarize(`Monthly Sales` = list(Sales))
@@ -240,7 +240,7 @@ reactable(
 
 #### Changing the pagesize
 
-```         
+```{r}         
 reactable(
   report,
   defaultPageSize = 13,
@@ -255,7 +255,7 @@ reactable(
 
 #### Adding points and labels
 
-```         
+```{r}         
 reactable(
   report,
   defaultPageSize = 13,
@@ -275,7 +275,7 @@ reactable(
 
 #### Adding reference line
 
-```         
+```{r}         
 reactable(
   report,
   defaultPageSize = 13,
@@ -295,7 +295,7 @@ reactable(
 
 #### Adding bandline
 
-```         
+```{r}         
 reactable(
   report,
   defaultPageSize = 13,
@@ -317,7 +317,7 @@ reactable(
 
 #### Changing from sparkline to sparkbar
 
-```         
+```{r}         
 reactable(
   report,
   defaultPageSize = 13,
