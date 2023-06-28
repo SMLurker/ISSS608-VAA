@@ -2,6 +2,7 @@
 title: "Project all"
 author: "SMLurker"
 ---
+
 ---
 title: "Take-home Exercise 3"
 author: "SMLurker"
@@ -48,10 +49,12 @@ mc3_nodes <- as_tibble(mc3_data$nodes) %>%
          type = as.character(type)) %>%
   select(id, country, type, revenue_omu, product_services)
 ```
+
 ```{r}
 write_rds(mc3_nodes, "data/mc3_nodes.rds")
 write_rds(mc3_edges, "data/mc3_edges.rds")
 ```
+
 ##### Edge table
 
 ```{r}
@@ -298,6 +301,8 @@ gghistostats(
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
+df_nodes_2 <- df_nodes_2
+
 df_edges_2 <- mc3_edges %>%
   filter(source %in% df_nodes_2$id)
 
@@ -332,6 +337,13 @@ g_3 + theme_graph()
 
 ```
 
+```{r}
+write_rds(df_nodes_2, "data/df_nodes_2.rds")
+```
+```{r}
+write_rds(mc3_nodes, "data/mc3_nodes.rds")
+write_rds(mc3_edges, "data/mc3_edges.rds")
+```
 ```{r}
 write_rds(df_nodes_3, "data/df_nodes_3.rds")
 write_rds(df_edges_2, "data/df_edges_2.rds")

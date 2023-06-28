@@ -314,13 +314,18 @@ gghistostats(
   xlab = "partners")
 ```
 
-###### visualize the nodes and edges and since Group 5 and 6 dont have partners, they will not appear in the network
+###### Here we define Group 1 as No. of partners > 50% and revenue <= 80%
+###### Group 2 as No. of partners > 50% and revenue > 80%
+###### Group 3 as No. of partners <= 50% and revenue <= 80%
+###### Group 4 as No. of partners <= 50% and revenue > 80%
+###### Group 5 and 6 are groups with no partners, but revenue less than or equal to 80% and revenue greater than 80%
+###### We then visualize the nodes and edges and since Group 5 and 6 dont have partners, they will not appear in the network. Group 4 is selected since they dont have many partners in business but they have high revenue_omu 
 
 ```{r}
 #| code-fold: true
 #| code-summary: "Show the code"
 df_edges_2 <- mc3_edges %>%
-  filter(source %in% df_nodes_2$id)
+  filter(source %in% df_nodes_2[df_nodes_2$group==4,]$id)
 
 id5 <- df_edges_2 %>%
   select(source) %>%
@@ -347,6 +352,7 @@ g_3 <- df_graph_3 %>%
   geom_edge_link(aes(width=weights), 
                  alpha=0.2) +
   scale_edge_width(range = c(0.01, 0.1)) +
+  geom_node_text(aes(label = ifelse(group > 1, as.character(id), "")), size = 2)+
   geom_node_point(aes(colour = group,
             size=betweenness_centrality))
 g_3 + theme_graph()
